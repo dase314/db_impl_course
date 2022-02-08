@@ -16,5 +16,5 @@
 |W5|存储-并发索引|Reading: Memory Consistency Model，Concurrent Linklist（Lock coupling，Optimistic Read,Lazy Delete）|W14|高可用-数据库备份，Raft（一） |Reading:[Raft Summary](https://dase314.github.io/blog/distributed_consensus/Raft%E4%BB%8B%E7%BB%8D.html)， [Raft Paper](https://web.stanford.edu/~ouster/cgi-bin/papers/raft-atc14) | 
 |W6|存储-其他 |Reading：Memory Allocation，Implement LRU—Cache，Compression，Bloomfilter，Second Index， Design Considerations for Database storage |W15|高可用-Raft（二）|Reading: 见上 |
 |W7|查询-执行引擎|Reading:[SQL执行过程](https://github.com/dase314/dase314.github.io/blob/main/files/query_overview.pdf)，[火山模型](https://github.com/dase314/dase314.github.io/blob/main/files/Vocano%20Model.pdf)|W16|高可用-分布式一致性与Basic Paxos（一）|Reading: [Distributed consensus revised-Heidi Howard](https://github.com/dase314/dase314.github.io/blob/main/files/W16-BasicPaxos.pdf)|
-|W8|查询-算子实现|Reading:Join Algorithms，Grace Join，External Sort|W17|高可用-分布式一致性与Basic Paxos(二）|Reading: 见上|
-|W9|查询-查询优化器|Reading: Query Optimization |W18|分布式数据库主要技术扩展（MPP、分布式事务等）|Reading:|
+|W8|查询-算子实现|Reading:[Join Algorithms，Grace Join，External Sort](https://github.com/dase314/dase314.github.io/blob/main/files/db_impl_joins.pdf)|W17|高可用-分布式一致性与Basic Paxos(二）|Reading: 见上|
+|W9|查询-查询优化器|Reading: [Query Optimization](https://github.com/dase314/dase314.github.io/blob/main/files/query_queryopt.pdf) |W18|分布式数据库主要技术扩展（MPP、分布式事务等）|Reading:|
