@@ -121,6 +121,22 @@ RC Table::create(
   return rc;
 }
 
+RC Table::destroy(const char* dir) {
+  //刷新所有脏页
+  RC rc = sync();
+  if(rc != RC::SUCCESS) return rc;
+
+  //TODO 删除描述表元数据的文件
+
+  //TODO 删除表数据文件
+
+  //TODO 清理所有的索引相关文件数据与索引元数据
+
+  return RC::GENERIC_ERROR;
+}
+
+
+
 RC Table::open(const char *meta_file, const char *base_dir)
 {
   // 加载元数据文件
