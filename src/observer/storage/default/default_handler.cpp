@@ -139,6 +139,10 @@ RC DefaultHandler::create_table(
 
 RC DefaultHandler::drop_table(const char *dbname, const char *relation_name)
 {
+  //TODO 查找对应的数据库
+
+  //TODO 如果数据库不存在返回错误，如果存在调用db的drop_table接口
+
   return RC::GENERIC_ERROR;
 }
 
