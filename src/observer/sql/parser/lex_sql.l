@@ -35,13 +35,14 @@ QUOTE            [\'\"]
 {WHITE_SAPCE}                           // ignore whitespace
 \n																						 ;
 
-[\-]?{DIGIT}+					                   yylval->number=atoi(yytext); RETURN_TOKEN(NUMBER);
+[\-]?{DIGIT}+					               yylval->number=atoi(yytext); RETURN_TOKEN(NUMBER);
 [\-]?{DIGIT}+{DOT}{DIGIT}+				       yylval->floats=(float)(atof(yytext)); RETURN_TOKEN(FLOAT);
 
-";"                 	 				           RETURN_TOKEN(SEMICOLON);
+";"                 	 				         RETURN_TOKEN(SEMICOLON);
 {DOT}                 					         RETURN_TOKEN(DOT);
 "*"                   					         RETURN_TOKEN(STAR);
-[Ee][Xx][Ii][Tt]						             RETURN_TOKEN(EXIT);
+[Ee][Xx][Ii][Tt]						         RETURN_TOKEN(EXIT);
+
 [Hh][Ee][Ll][Pp]                    	   RETURN_TOKEN(HELP);
 [Dd][Ee][Ss][Cc]                         RETURN_TOKEN(DESC);
 [Cc][Rr][Ee][Aa][Tt][Ee]                 RETURN_TOKEN(CREATE);
@@ -68,12 +69,18 @@ QUOTE            [\'\"]
 [Ii][Nn][Tt]					                   RETURN_TOKEN(INT_T);
 [Cc][Hh][Aa][Rr]				                 RETURN_TOKEN(STRING_T);
 [Ff][Ll][Oo][Aa][Tt]			               RETURN_TOKEN(FLOAT_T);
+[Dd][Aa][Tt][Ee]				                RETURN_TOKEN(DATE_T);
+
+
 [Ll][Oo][Aa][Dd]			                   RETURN_TOKEN(LOAD);
 [Dd][Aa][Tt][Aa]	                       RETURN_TOKEN(DATA);
 [Ii][Nn][Ff][Ii][Ll][Ee]                 RETURN_TOKEN(INFILE);
+
+
 {ID}							                       yylval->string=strdup(yytext); RETURN_TOKEN(ID);
 "("								                       RETURN_TOKEN(LBRACE);
 ")"								                       RETURN_TOKEN(RBRACE);
+
 
 ","                                      RETURN_TOKEN(COMMA);
 "="                                      RETURN_TOKEN(EQ);
@@ -82,11 +89,11 @@ QUOTE            [\'\"]
 "<"                                      RETURN_TOKEN(LT);
 ">="                                     RETURN_TOKEN(GE);
 ">"                                      RETURN_TOKEN(GT);
+
+{QUOTE}[0-9]{4}-((0?[1-9])|(1[0-2]))-((0?[1-9])|([12][0-9])|(3[0-1])){QUOTE}	     {yylval->string=strdup(yytext);RETURN_TOKEN(DATE);}
 {QUOTE}[\40\42\47A-Za-z0-9_/\.\-]*{QUOTE}	     yylval->string=strdup(yytext); RETURN_TOKEN(SSS);
-
-.						                             printf("Unknown character [%c]\n",yytext[0]); return yytext[0];
+.						                 { printf("Unknown Character [%c]\n",yytext[0]);  return yytext[0];    }
 %%
-
 void scan_string(const char *str, yyscan_t scanner) {
 	yy_switch_to_buffer(yy_scan_string(str, scanner), scanner);
 }

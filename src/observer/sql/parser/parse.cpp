@@ -57,12 +57,39 @@ void value_init_string(Value *value, const char *v)
   value->type = CHARS;
   value->data = strdup(v);
 }
+
+bool check_date(int y, int m, int d)
+{
+  // TODO 根据 y:year,m:month,d:day 校验日期是否合法
+  // TODO 合法 return 0
+  // TODO 不合法 return 1
+  return 1;
+}
+
+int value_init_date(Value *value, const char *v) {
+  // TODO 将 value 的 type 属性修改为日期属性:DATES
+
+  // 从lex的解析中读取 year,month,day
+  int y,m,d;
+  sscanf(v, "%d-%d-%d", &y, &m, &d);//not check return value eq 3, lex guarantee
+  // 对读取的日期做合法性校验
+  bool b = check_date(y,m,d);
+  if(!b) return -1;
+  // TODO 将日期转换成整数
+
+  // TODO 将value 的 data 属性修改为转换后的日期
+
+  return 0;
+}
+
+
 void value_destroy(Value *value)
 {
   value->type = UNDEFINED;
   free(value->data);
   value->data = nullptr;
 }
+
 
 void condition_init(Condition *condition, CompOp comp, int left_is_attr, RelAttr *left_attr, Value *left_value,
     int right_is_attr, RelAttr *right_attr, Value *right_value)
