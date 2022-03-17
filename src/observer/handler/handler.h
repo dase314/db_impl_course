@@ -1,16 +1,14 @@
-/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its affiliates. All rights reserved.
-miniob is licensed under Mulan PSL v2.
-You can use this software according to the terms and conditions of the Mulan PSL v2.
-You may obtain a copy of Mulan PSL v2 at:
-         http://license.coscl.org.cn/MulanPSL2
-THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its
+affiliates. All rights reserved. miniob is licensed under Mulan PSL v2. You can
+use this software according to the terms and conditions of the Mulan PSL v2. You
+may obtain a copy of Mulan PSL v2 at: http://license.coscl.org.cn/MulanPSL2 THIS
+SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 See the Mulan PSL v2 for more details. */
 
 //
-// Created by Meiyi
-// Rewritten by Longda on 2021/4/14.
+// Created by Longda on 2021/4/14.
 //
 
 #ifndef __OBSERVER_HANDLER_HANDLER_H__
@@ -35,11 +33,11 @@ typedef struct {
 
 typedef enum {
   EQual,   //"="			0
-  LEqual,  //"<="           1
+  LEqual,  //"<="          1
   NEqual,  //"<>"			2
   LessT,   //"<"			3
   GEqual,  //">="			4
-  GreatT,  //">"            5
+  GreatT,  //">"           5
   NO_OP
 } CompOp;
 
@@ -53,16 +51,16 @@ struct _Value {
 };
 
 typedef struct _Condition {
-  int bLhsIsAttr;   // TRUE if left-hand side is an attribute
-                    // 1时，操作符右边是属性，0时，是属性值
+  int bLhsIsAttr;  // TRUE if left-hand side is an attribute
+  // 1时，操作符右边是属性，0时，是属性值
   Value lhsValue;   // left-hand side value if bLhsIsAttr = FALSE
   RelAttr lhsAttr;  // left-hand side attribute
   CompOp op;        // comparison operator
   int bRhsIsAttr;   // TRUE if right-hand side is an attribute
-                    // 1时，操作符右边是属性，0时，是属性值
+  // 1时，操作符右边是属性，0时，是属性值
   //   and not a value
   RelAttr rhsAttr;  // right-hand side attribute if bRhsIsAttr = TRUE 右边的属性
-  Value rhsValue;   // right-hand side value if bRhsIsAttr = FALSE
+  Value rhsValue;  // right-hand side value if bRhsIsAttr = FALSE
 } Condition;
 
 // struct of select
@@ -146,9 +144,9 @@ union sqls {
 // struct of flag and sql_struct
 typedef struct {
   int flag; /*match to the sqls
-               0--error;1--select;2--insert;3--update;4--delete;5--create
-               table;6--drop table;7--create index;8--drop
-               index;9--help;10--exit;*/
+             0--error;1--select;2--insert;3--update;4--delete;5--create
+             table;6--drop table;7--create index;8--drop
+             index;9--help;10--exit;*/
   union sqls sstr;
 } sqlstr;
 
@@ -270,6 +268,7 @@ RC deleteRecord(char *relName, int nConditions, Condition *conditions);
  * @param conditions
  * @return
  */
-RC updateRecord(char *relName, char *attrName, Value *value, int nConditions, Condition *conditions);
+RC updateRecord(char *relName, char *attrName, Value *value, int nConditions,
+                Condition *conditions);
 
 #endif  //__OBSERVER_HANDLER_HANDLER_H__

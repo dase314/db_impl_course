@@ -1,15 +1,14 @@
-/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its affiliates. All rights reserved.
-miniob is licensed under Mulan PSL v2.
-You can use this software according to the terms and conditions of the Mulan PSL v2.
-You may obtain a copy of Mulan PSL v2 at:
-         http://license.coscl.org.cn/MulanPSL2
-THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its
+affiliates. All rights reserved. miniob is licensed under Mulan PSL v2. You can
+use this software according to the terms and conditions of the Mulan PSL v2. You
+may obtain a copy of Mulan PSL v2 at: http://license.coscl.org.cn/MulanPSL2 THIS
+SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 See the Mulan PSL v2 for more details. */
 
 //
-// Created by Meiyi & Wangyunlai on 2021/5/7.
+// Created by Wangyunlai on 2021/5/7.
 //
 
 #ifndef __OBSERVER_STORAGE_COMMON_CONDITION_FILTER_H_
@@ -19,6 +18,7 @@ See the Mulan PSL v2 for more details. */
 #include "sql/parser/parse.h"
 
 struct Record;
+
 class Table;
 
 struct ConDesc {
@@ -29,7 +29,7 @@ struct ConDesc {
 };
 
 class ConditionFilter {
-public:
+ public:
   virtual ~ConditionFilter();
 
   /**
@@ -41,32 +41,26 @@ public:
 };
 
 class DefaultConditionFilter : public ConditionFilter {
-public:
+ public:
   DefaultConditionFilter();
+
   virtual ~DefaultConditionFilter();
 
-  RC init(const ConDesc &left, const ConDesc &right, AttrType attr_type, CompOp comp_op);
+  RC init(const ConDesc &left, const ConDesc &right, AttrType attr_type,
+          CompOp comp_op);
+
   RC init(Table &table, const Condition &condition);
 
   virtual bool filter(const Record &rec) const;
 
-public:
-  const ConDesc &left() const
-  {
-    return left_;
-  }
+ public:
+  const ConDesc &left() const { return left_; }
 
-  const ConDesc &right() const
-  {
-    return right_;
-  }
+  const ConDesc &right() const { return right_; }
 
-  CompOp comp_op() const
-  {
-    return comp_op_;
-  }
+  CompOp comp_op() const { return comp_op_; }
 
-private:
+ private:
   ConDesc left_;
   ConDesc right_;
   AttrType attr_type_ = UNDEFINED;
@@ -74,28 +68,26 @@ private:
 };
 
 class CompositeConditionFilter : public ConditionFilter {
-public:
+ public:
   CompositeConditionFilter() = default;
+
   virtual ~CompositeConditionFilter();
 
   RC init(const ConditionFilter *filters[], int filter_num);
+
   RC init(Table &table, const Condition *conditions, int condition_num);
+
   virtual bool filter(const Record &rec) const;
 
-public:
-  int filter_num() const
-  {
-    return filter_num_;
-  }
-  const ConditionFilter &filter(int index) const
-  {
-    return *filters_[index];
-  }
+ public:
+  int filter_num() const { return filter_num_; }
 
-private:
+  const ConditionFilter &filter(int index) const { return *filters_[index]; }
+
+ private:
   RC init(const ConditionFilter *filters[], int filter_num, bool own_memory);
 
-private:
+ private:
   const ConditionFilter **filters_ = nullptr;
   int filter_num_ = 0;
   bool memory_owner_ = false;  // filters_的内存是否由自己来控制

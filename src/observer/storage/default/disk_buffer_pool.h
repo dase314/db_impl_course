@@ -1,39 +1,37 @@
-/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its affiliates. All rights reserved.
-miniob is licensed under Mulan PSL v2.
-You can use this software according to the terms and conditions of the Mulan PSL v2.
-You may obtain a copy of Mulan PSL v2 at:
-         http://license.coscl.org.cn/MulanPSL2
-THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its
+affiliates. All rights reserved. miniob is licensed under Mulan PSL v2. You can
+use this software according to the terms and conditions of the Mulan PSL v2. You
+may obtain a copy of Mulan PSL v2 at: http://license.coscl.org.cn/MulanPSL2 THIS
+SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 See the Mulan PSL v2 for more details. */
 
 //
-// Created by Meiyi & Longda on 2021/4/13.
+// Created by Longda on 2021/4/13.
 //
 #ifndef __OBSERVER_STORAGE_COMMON_PAGE_MANAGER_H_
 #define __OBSERVER_STORAGE_COMMON_PAGE_MANAGER_H_
 
 #include <fcntl.h>
 #include <stdio.h>
-#include <sys/types.h>
-#include <stdlib.h>
-
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <time.h>
-
+#include <list>
+#include <vector>
+#include "lrucache.hpp"
 #include "rc.h"
-#include "common/mm/mem_pool.h"
 
 typedef int PageNum;
 
 //
 #define BP_INVALID_PAGE_NUM (-1)
-#define BP_PAGE_SIZE (1 << 13)
+#define BP_PAGE_SIZE (1 << 12)
 #define BP_PAGE_DATA_SIZE (BP_PAGE_SIZE - sizeof(PageNum))
 #define BP_FILE_SUB_HDR_SIZE (sizeof(BPFileSubHeader))
-#define BP_BUFFER_SIZE 256
+#define BP_BUFFER_SIZE 50
 #define MAX_OPEN_FILE 1024
 
 typedef struct {
@@ -48,37 +46,23 @@ typedef struct {
 } BPFileSubHeader;
 
 typedef struct {
-  int file_id;
-  std::set<PageNum> pages;
-} BPDisposedPages;
-
-typedef struct Frame_ {
   bool dirty;
   unsigned int pin_count;
   unsigned long acc_time;
   int file_desc;
   Page page;
-
-  bool can_purge()
-  {
-    return pin_count <= 0;
-  }
 } Frame;
 
-typedef struct BPPageHandle {
-  BPPageHandle() : open(false), frame(nullptr)
-  {}
-
+typedef struct {
   bool open;
   Frame *frame;
 } BPPageHandle;
 
 class BPFileHandle {
-public:
-  BPFileHandle();
-  ~BPFileHandle();
+ public:
+  BPFileHandle() { memset(this, 0, sizeof(*this)); }
 
-public:
+ public:
   bool bopen;
   const char *file_name;
   int file_desc;
@@ -88,41 +72,42 @@ public:
   BPFileSubHeader *file_sub_header;
 };
 
-class BPManager : public common::MemPoolSimple<Frame> {
-public:
-  BPManager(const char *tag);
+class BPManager {
+ public:
+  BPManager(int size = BP_BUFFER_SIZE) {
+    //TODO for test
+  }
 
-  Frame *get(int file_desc, PageNum page_num);
+  ~BPManager() {
+    //TODO for test
+  }
 
-  std::list<Frame *> find_list(int file_desc);
+  Frame *alloc() {
+    // TODO for test
 
-  Frame *begin_purge();
+  }
+
+  Frame *get(int file_desc, PageNum page_num) {
+    // TODO for test
+
+  }
+
+  Frame *getFrame() {
+    // TODO for test
+  }
+
+  bool *getAllocated() {
+    // TODO for test
+  }
+
+ public:
+  int size;
+  Frame *frame = nullptr;
+  bool *allocated = nullptr;
 };
 
 class DiskBufferPool {
-public:
-  static DiskBufferPool *mk_instance()
-  {
-    return new DiskBufferPool();
-  }
-
-  static void set_pool_num(int pool_num)
-  {
-    if (pool_num > 0) {
-      POOL_NUM = pool_num;
-      LOG_INFO("Successfully set POOL_NUM as %d", pool_num);
-    } else {
-      LOG_INFO("Invalid input argument pool_num:%d", pool_num);
-    }
-  }
-
-  static const int get_pool_num()
-  {
-    return POOL_NUM;
-  }
-
-  ~DiskBufferPool();
-
+ public:
   /**
    * 创建一个名称为指定文件名的分页文件
    */
@@ -163,7 +148,7 @@ public:
   RC get_data(BPPageHandle *page_handle, char **data);
 
   /**
-   * 比purge_page多一个动作， 在磁盘上将对应的页数据删掉。
+   * 丢弃文件中编号为pageNum的页面，将其变为空闲页
    */
   RC dispose_page(int file_id, PageNum page_num);
 
@@ -172,7 +157,7 @@ public:
    * @param file_handle
    * @param page_num 如果不指定page_num 将刷新所有页
    */
-  RC purge_page(int file_id, PageNum page_num);
+  RC force_page(int file_id, PageNum page_num);
 
   /**
    * 标记指定页面为“脏”页。如果修改了页面的内容，则应调用此函数，
@@ -193,33 +178,33 @@ public:
    */
   RC get_page_count(int file_id, int *page_count);
 
-  RC purge_all_pages(int file_id);
+  RC flush_all_pages(int file_id);
 
-protected:
-  RC allocate_page(Frame **buf);
+ protected:
+  RC allocate_block(Frame **buf);
+
+  RC dispose_block(Frame *buf);
 
   /**
    * 刷新指定文件关联的所有脏页到磁盘，除了pinned page
    * @param file_handle
    * @param page_num 如果不指定page_num 将刷新所有页
    */
-  RC purge_page(BPFileHandle *file_handle, PageNum page_num);
-  RC purge_page(Frame *used_frame);
-  RC purge_all_pages(BPFileHandle *file_handle);
+  RC force_page(BPFileHandle *file_handle, PageNum page_num);
+
+  RC force_all_pages(BPFileHandle *file_handle);
+
   RC check_file_id(int file_id);
+
   RC check_page_num(PageNum page_num, BPFileHandle *file_handle);
+
   RC load_page(PageNum page_num, BPFileHandle *file_handle, Frame *frame);
-  RC flush_page(Frame *frame);
 
-private:
-  DiskBufferPool();
+  RC flush_block(Frame *frame);
 
-private:
+ private:
   BPManager bp_manager_;
   BPFileHandle *open_list_[MAX_OPEN_FILE] = {nullptr};
-  std::map<int, BPDisposedPages> disposed_pages;
-
-  static int POOL_NUM;
 };
 
 DiskBufferPool *theGlobalDiskBufferPool();

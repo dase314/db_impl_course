@@ -1,10 +1,9 @@
-/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its affiliates. All rights reserved.
-miniob is licensed under Mulan PSL v2.
-You can use this software according to the terms and conditions of the Mulan PSL v2.
-You may obtain a copy of Mulan PSL v2 at:
-         http://license.coscl.org.cn/MulanPSL2
-THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its
+affiliates. All rights reserved. miniob is licensed under Mulan PSL v2. You can
+use this software according to the terms and conditions of the Mulan PSL v2. You
+may obtain a copy of Mulan PSL v2 at: http://license.coscl.org.cn/MulanPSL2 THIS
+SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 See the Mulan PSL v2 for more details. */
 
@@ -15,15 +14,15 @@ See the Mulan PSL v2 for more details. */
 #include "session_stage.h"
 
 #include <string.h>
+
 #include <string>
 
 #include "common/conf/ini.h"
-#include "common/log/log.h"
-#include "common/seda/timer_stage.h"
-
 #include "common/lang/mutex.h"
+#include "common/log/log.h"
 #include "common/metrics/metrics_registry.h"
 #include "common/seda/callback.h"
+#include "common/seda/timer_stage.h"
 #include "event/session_event.h"
 #include "event/sql_event.h"
 #include "net/server.h"
@@ -34,16 +33,14 @@ using namespace common;
 const std::string SessionStage::SQL_METRIC_TAG = "SessionStage.sql";
 
 // Constructor
-SessionStage::SessionStage(const char *tag) : Stage(tag), resolve_stage_(nullptr), sql_metric_(nullptr)
-{}
+SessionStage::SessionStage(const char *tag)
+    : Stage(tag), resolve_stage_(nullptr), sql_metric_(nullptr) {}
 
 // Destructor
-SessionStage::~SessionStage()
-{}
+SessionStage::~SessionStage() {}
 
 // Parse properties, instantiate a stage object
-Stage *SessionStage::make_stage(const std::string &tag)
-{
+Stage *SessionStage::make_stage(const std::string &tag) {
   SessionStage *stage = new (std::nothrow) SessionStage(tag.c_str());
   if (stage == nullptr) {
     LOG_ERROR("new ExecutorStage failed");
@@ -54,8 +51,7 @@ Stage *SessionStage::make_stage(const std::string &tag)
 }
 
 // Set properties for this object set in stage specific properties
-bool SessionStage::set_properties()
-{
+bool SessionStage::set_properties() {
   //  std::string stageNameStr(stage_name_);
   //  std::map<std::string, std::string> section = g_properties()->get(
   //    stageNameStr);
@@ -68,8 +64,7 @@ bool SessionStage::set_properties()
 }
 
 // Initialize stage params and validate outputs
-bool SessionStage::initialize()
-{
+bool SessionStage::initialize() {
   LOG_TRACE("Enter");
 
   std::list<Stage *>::iterator stgp = next_stage_list_.begin();
@@ -83,8 +78,7 @@ bool SessionStage::initialize()
 }
 
 // Cleanup after disconnection
-void SessionStage::cleanup()
-{
+void SessionStage::cleanup() {
   LOG_TRACE("Enter");
 
   MetricsRegistry &metricsRegistry = get_metrics_registry();
@@ -97,8 +91,7 @@ void SessionStage::cleanup()
   LOG_TRACE("Exit");
 }
 
-void SessionStage::handle_event(StageEvent *event)
-{
+void SessionStage::handle_event(StageEvent *event) {
   LOG_TRACE("Enter\n");
 
   // right now, we just support only one event.
@@ -108,8 +101,7 @@ void SessionStage::handle_event(StageEvent *event)
   return;
 }
 
-void SessionStage::callback_event(StageEvent *event, CallbackContext *context)
-{
+void SessionStage::callback_event(StageEvent *event, CallbackContext *context) {
   LOG_TRACE("Enter\n");
 
   SessionEvent *sev = dynamic_cast<SessionEvent *>(event);
@@ -136,9 +128,7 @@ void SessionStage::callback_event(StageEvent *event, CallbackContext *context)
   return;
 }
 
-void SessionStage::handle_request(StageEvent *event)
-{
-
+void SessionStage::handle_request(StageEvent *event) {
   SessionEvent *sev = dynamic_cast<SessionEvent *>(event);
   if (nullptr == sev) {
     LOG_ERROR("Cannot cat event to sessionEvent");
