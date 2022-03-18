@@ -1,5 +1,0 @@
-if(EXISTS "/Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug/unitest/log_test[1]_tests.cmake")
-  include("/Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug/unitest/log_test[1]_tests.cmake")
-else()
-  add_test(log_test_NOT_BUILT log_test_NOT_BUILT)
-endif()
