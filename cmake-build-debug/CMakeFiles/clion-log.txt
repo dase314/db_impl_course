@@ -1,0 +1,182 @@
+"/Users/rehoboamw/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/213.6777.58/CLion.app/Contents/bin/cmake/mac/bin/cmake" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=/Users/rehoboamw/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/213.6777.58/CLion.app/Contents/bin/ninja/mac/ninja" -G Ninja /Users/rehoboamw/Lesson/db_impl_course
+-- This is SOURCE dir /Users/rehoboamw/Lesson/db_impl_course/test
+-- This is BINARY dir /Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug/test
+-- This is Project source dir /Users/rehoboamw/Lesson/db_impl_course
+-- This is PROJECT_BINARY_DIR dir /Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug
+-- HOME dir: /Users/rehoboamw
+-- This is apple
+Disable debug
+CMAKE_CXX_FLAGS is  -Wall -DCMAKE_EXPORT_COMPILE_COMMANDS=1  -O2 -g 
+CMAKE_INSTALL_PREFIX has been set as /usr/local
+Install target dir is /usr/local
+Begin to build common
+-- This is PROJECT_BINARY_DIR dir /Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug/deps/common
+-- This is PROJECT_SOURCE_DIR dir /Users/rehoboamw/Lesson/db_impl_course/deps/common
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/conf/ini.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/io/io.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/io/roll_select_dir.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/lang/bitmap.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/lang/mutex.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/lang/string.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/log/log.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/math/md5.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/math/random_generator.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/math/regex.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/metrics/console_reporter.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/metrics/histogram_snapshot.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/metrics/log_reporter.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/metrics/metrics.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/metrics/metrics_registry.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/metrics/reporter.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/metrics/reservoir.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/metrics/sampler.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/metrics/timer_snapshot.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/metrics/uniform_reservoir.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/mm/mem_pool.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/os/os.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/os/path.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/os/pidfile.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/os/process.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/os/process_param.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/os/signal.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/seda/callback.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/seda/event_dispatcher.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/seda/example_stage.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/seda/init.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/seda/kill_thread.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/seda/metrics_report_event.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/seda/metrics_stage.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/seda/seda_config.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/seda/stage.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/seda/stage_event.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/seda/thread_pool.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/seda/timer_stage.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/time/datetime.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/deps/common/time/timeout_info.cpp
+-- This is the func_static OUTPUT_NAME:common
+Install conf/ini.h to /usr/local/common/include/conf
+Install defs.h to /usr/local/common/include/
+Install io/io.h to /usr/local/common/include/io
+Install io/roll_select_dir.h to /usr/local/common/include/io
+Install io/select_dir.h to /usr/local/common/include/io
+Install lang/bitmap.h to /usr/local/common/include/lang
+Install lang/mutex.h to /usr/local/common/include/lang
+Install lang/serializable.h to /usr/local/common/include/lang
+Install lang/string.h to /usr/local/common/include/lang
+Install log/log.h to /usr/local/common/include/log
+Install math/md5.h to /usr/local/common/include/math
+Install math/random_generator.h to /usr/local/common/include/math
+Install math/regex.h to /usr/local/common/include/math
+Install metrics/console_reporter.h to /usr/local/common/include/metrics
+Install metrics/histogram_snapshot.h to /usr/local/common/include/metrics
+Install metrics/log_reporter.h to /usr/local/common/include/metrics
+Install metrics/metric.h to /usr/local/common/include/metrics
+Install metrics/metrics.h to /usr/local/common/include/metrics
+Install metrics/metrics_registry.h to /usr/local/common/include/metrics
+Install metrics/reporter.h to /usr/local/common/include/metrics
+Install metrics/reservoir.h to /usr/local/common/include/metrics
+Install metrics/sampler.h to /usr/local/common/include/metrics
+Install metrics/snapshot.h to /usr/local/common/include/metrics
+Install metrics/timer_snapshot.h to /usr/local/common/include/metrics
+Install metrics/uniform_reservoir.h to /usr/local/common/include/metrics
+Install mm/debug_new.h to /usr/local/common/include/mm
+Install mm/mem.h to /usr/local/common/include/mm
+Install mm/mem_pool.h to /usr/local/common/include/mm
+Install os/os.h to /usr/local/common/include/os
+Install os/path.h to /usr/local/common/include/os
+Install os/pidfile.h to /usr/local/common/include/os
+Install os/process.h to /usr/local/common/include/os
+Install os/process_param.h to /usr/local/common/include/os
+Install os/signal.h to /usr/local/common/include/os
+Install seda/callback.h to /usr/local/common/include/seda
+Install seda/class_factory.h to /usr/local/common/include/seda
+Install seda/event_dispatcher.h to /usr/local/common/include/seda
+Install seda/example_stage.h to /usr/local/common/include/seda
+Install seda/init.h to /usr/local/common/include/seda
+Install seda/kill_thread.h to /usr/local/common/include/seda
+Install seda/metrics_report_event.h to /usr/local/common/include/seda
+Install seda/metrics_stage.h to /usr/local/common/include/seda
+Install seda/seda_config.h to /usr/local/common/include/seda
+Install seda/seda_defs.h to /usr/local/common/include/seda
+Install seda/stage.h to /usr/local/common/include/seda
+Install seda/stage_event.h to /usr/local/common/include/seda
+Install seda/stage_factory.h to /usr/local/common/include/seda
+Install seda/thread_pool.h to /usr/local/common/include/seda
+Install seda/timer_stage.h to /usr/local/common/include/seda
+Install time/datetime.h to /usr/local/common/include/time
+Install time/timeout_info.h to /usr/local/common/include/time
+Install version.h to /usr/local/common/include/
+Begin to build miniob
+-- This is PROJECT_BINARY_DIR dir /Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug/src
+-- This is PROJECT_SOURCE_DIR dir /Users/rehoboamw/Lesson/db_impl_course/src
+Begin to build obclient
+-- This is PROJECT_BINARY_DIR dir /Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug/src/obclient
+-- This is PROJECT_SOURCE_DIR dir /Users/rehoboamw/Lesson/db_impl_course/src/obclient
+Use /Users/rehoboamw/Lesson/db_impl_course/src/obclient/client.cpp
+Binary directory:/Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug/src/obclient/../../bin
+Begin to build observer
+-- This is PROJECT_BINARY_DIR dir /Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug/src/observer
+-- This is PROJECT_SOURCE_DIR dir /Users/rehoboamw/Lesson/db_impl_course/src/observer
+MAIN SRC: /Users/rehoboamw/Lesson/db_impl_course/src/observer/main.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/event/execution_plan_event.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/event/session_event.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/event/sql_event.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/event/storage_event.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/init.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/main.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/net/server.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/rc.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/session/session.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/session/session_stage.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/sql/executor/execute_stage.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/sql/executor/execution_node.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/sql/executor/tuple.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/sql/executor/value.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/sql/optimizer/optimize_stage.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/sql/parser/lex.yy.c
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/sql/parser/parse.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/sql/parser/parse_stage.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/sql/parser/resolve_stage.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/sql/parser/yacc_sql.tab.c
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/sql/plan_cache/plan_cache_stage.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/sql/query_cache/query_cache_stage.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/common/bplus_tree.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/common/bplus_tree_index.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/common/condition_filter.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/common/db.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/common/field_meta.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/common/index.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/common/index_manager.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/common/index_meta.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/common/meta_util.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/common/record_manager.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/common/table.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/common/table_meta.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/default/default_handler.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/default/default_storage_stage.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/default/disk_buffer_pool.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/mem/mem_storage_stage.cpp
+Use /Users/rehoboamw/Lesson/db_impl_course/src/observer/storage/trx/trx.cpp
+Binary directory:/Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug/src/observer/../../bin
+Archive directory:/Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug/src/observer/../../lib
+Begin to build unitest
+-- This is PROJECT_BINARY_DIR dir /Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug/unitest
+-- This is PROJECT_SOURCE_DIR dir /Users/rehoboamw/Lesson/db_impl_course/unitest
+ -Wall -DCMAKE_EXPORT_COMPILE_COMMANDS=1  -O2 -g 
+Build bitmap_test according to /Users/rehoboamw/Lesson/db_impl_course/unitest/bitmap_test.cpp
+Build bp_manager_test according to /Users/rehoboamw/Lesson/db_impl_course/unitest/bp_manager_test.cpp
+Build bplus_tree_test according to /Users/rehoboamw/Lesson/db_impl_course/unitest/bplus_tree_test.cpp
+Build log_test according to /Users/rehoboamw/Lesson/db_impl_course/unitest/log_test.cpp
+Build md5_test according to /Users/rehoboamw/Lesson/db_impl_course/unitest/md5_test.cpp
+Build mem_pool_test according to /Users/rehoboamw/Lesson/db_impl_course/unitest/mem_pool_test.cpp
+Build path_test according to /Users/rehoboamw/Lesson/db_impl_course/unitest/path_test.cpp
+Build pidfile_test according to /Users/rehoboamw/Lesson/db_impl_course/unitest/pidfile_test.cpp
+Build rc_test according to /Users/rehoboamw/Lesson/db_impl_course/unitest/rc_test.cpp
+Begin to build test
+-- This is PROJECT_BINARY_DIR dir /Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug/test
+-- This is PROJECT_SOURCE_DIR dir /Users/rehoboamw/Lesson/db_impl_course/test
+ -Wall -DCMAKE_EXPORT_COMPILE_COMMANDS=1  -O2 -g 
+Build client_performance_test according to /Users/rehoboamw/Lesson/db_impl_course/test/client_performance_test.cpp
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug

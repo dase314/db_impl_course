@@ -1,0 +1,45 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"INSTALL"
+		],
+		"files" : 
+		[
+			"src/obclient/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 33,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"bin/obclient"
+			],
+			"targetId" : "obclient::@4196e604df7f482c3cc7",
+			"targetIndex" : 9,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "src/obclient",
+		"source" : "src/obclient"
+	}
+}
