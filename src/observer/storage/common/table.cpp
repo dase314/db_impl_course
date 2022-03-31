@@ -17,10 +17,12 @@ See the Mulan PSL v2 for more details. */
 #include <string.h>
 
 #include <algorithm>
+#include <vector>
 
 #include "common/lang/string.h"
 #include "common/log/log.h"
 #include "common/os/path.h"
+#include "sql/executor/value.h"
 #include "storage/common/bplus_tree_index.h"
 #include "storage/common/condition_filter.h"
 #include "storage/common/index.h"
@@ -264,24 +266,36 @@ RC Table::insert_record(Trx *trx, Record *record) {
   return rc;
 }
 
-RC Table::insert_record(Trx *trx, int value_num, const Value *values) {
-  if (value_num <= 0 || nullptr == values) {
-    LOG_ERROR("Invalid argument. value num=%d, values=%p", value_num, values);
+RC Table::insert_record(Trx *trx, int tuple_num, const InsertTuple *tuples) {
+  if (tuple_num <= 0 || nullptr == tuples) {
+    LOG_ERROR("Invalid argument. tuple num=%d, tuples=%p", tuple_num, tuples);
     return RC::INVALID_ARGUMENT;
   }
 
-  char *record_data;
-  RC rc = make_record(value_num, values, record_data);
-  if (rc != RC::SUCCESS) {
-    LOG_ERROR("Failed to create a record. rc=%d:%s", rc, strrc(rc));
-    return rc;
+  std::vector<char *> record_data;
+  for (int i = 0; i < tuple_num; i++) {
+    char *record_datum;
+    RC rc = make_record(tuples[i].value_num, tuples[i].values, record_datum);
+    if (rc != RC::SUCCESS) {
+      LOG_ERROR("Failed to create a record. rc=%d:%s", rc, strrc(rc));
+      return rc;
+    }
+    record_data.push_back(record_datum);
   }
 
+  RC rc;
   Record record;
-  record.data = record_data;
-  // record.valid = true;
-  rc = insert_record(trx, &record);
-  delete[] record_data;
+  for (char* record_datum: record_data) {
+    record.data = record_datum;
+    rc = insert_record(trx, &record);
+    if (rc != RC::SUCCESS) {
+      break;
+    }
+  }
+
+  for (char* record_datum: record_data) {
+    delete[] record_datum;
+  }
   return rc;
 }
 
@@ -290,30 +304,34 @@ const char *Table::name() const { return table_meta_.name(); }
 const TableMeta &Table::table_meta() const { return table_meta_; }
 
 RC Table::make_record(int value_num, const Value *values, char *&record_out) {
-  // 检查字段类型是否一致
   if (value_num + table_meta_.sys_field_num() != table_meta_.field_num()) {
     return RC::SCHEMA_FIELD_MISSING;
   }
+
+  int record_size = table_meta_.record_size();
+  char *record = new char[record_size];
 
   const int normal_field_start_index = table_meta_.sys_field_num();
   for (int i = 0; i < value_num; i++) {
     const FieldMeta *field = table_meta_.field(i + normal_field_start_index);
     const Value &value = values[i];
-    if (field->type() != value.type) {
+    if (field->type() == DATES && value.type == CHARS) {
+      uint16_t date;
+      RC rc = serialize_date(&date, (const char *)value.data);
+      if (rc != RC::SUCCESS) {
+        LOG_ERROR("Invalid date value: %s", (const char *)value.data);
+        delete[] record;
+        return rc;
+      }
+      memcpy(record + field->offset(), &date, field->len());
+    } else if (field->type() == value.type) {
+      memcpy(record + field->offset(), value.data, field->len());
+    } else {
       LOG_ERROR("Invalid value type. field name=%s, type=%d, but given=%d",
                 field->name(), field->type(), value.type);
+      delete[] record;
       return RC::SCHEMA_FIELD_TYPE_MISMATCH;
     }
-  }
-
-  // 复制所有字段的值
-  int record_size = table_meta_.record_size();
-  char *record = new char[record_size];
-
-  for (int i = 0; i < value_num; i++) {
-    const FieldMeta *field = table_meta_.field(i + normal_field_start_index);
-    const Value &value = values[i];
-    memcpy(record + field->offset(), value.data, field->len());
   }
 
   record_out = record;
@@ -414,6 +432,8 @@ RC Table::scan_record(Trx *trx, ConditionFilter *filter, int limit,
   for (; RC::SUCCESS == rc && record_count < limit;
        rc = scanner.get_next_record(&record)) {
     if (trx == nullptr || trx->is_visible(this, &record)) {
+      //      std::cout<<"scan: page_num: "<<record.rid.page_num<<" slot_num:
+      //      "<<record.rid.slot_num<<" data: "<<record.data<<std::endl;
       rc = record_reader(&record, context);
       if (rc != RC::SUCCESS) {
         break;
@@ -583,10 +603,156 @@ RC Table::create_index(Trx *trx, const char *index_name,
   return rc;
 }
 
+/**
+ * update by thomas
+ */
+class RecordUpdater {
+ public:
+  RecordUpdater(Table &table, Trx *trx) : table_(table), trx_(trx) {}
+
+  RC update_record(Record *record) {
+    RC rc = RC::SUCCESS;
+    rc = table_.update_record(trx_, record);
+    if (rc == RC::SUCCESS) {
+      updated_count_++;
+    }
+    return rc;
+  }
+
+  void set_data(const char *attributeName, const Value *value_) {
+    this->attribute_name = attributeName;
+    this->value = value_;
+  }
+
+  RC update_attribute(Record *record) {
+    // TODO: meta error check
+    int num;
+    for (num = 0; num < table_.table_meta_.field_num(); num++) {
+      if (0 == strcmp(table_.table_meta_.field(num)->name(), attribute_name)) {
+        break;
+      }
+    }
+    RC rc = SUCCESS;
+    if (table_.table_meta_.field(num)->type() != DATES) {
+      // wrong attr type
+      if (value->type != table_.table_meta_.field(num)->type()) {
+        return INVALID_ARGUMENT;
+      }
+      memcpy(record->data + table_.table_meta_.field(num)->offset(),
+             value->data, table_.table_meta_.field(num)->len());
+    } else {
+      if (value->type != CHARS) {
+        return INVALID_ARGUMENT;
+      }
+      uint16_t t;
+      rc = serialize_date(&t, (const char *)value->data);
+      if (rc != SUCCESS) {
+        return rc;
+      }
+      memcpy(record->data + table_.table_meta_.field(num)->offset(), &t, 2);
+    }
+
+    return rc;
+  }
+
+  int updated_count() const { return updated_count_; }
+
+ private:
+  Table &table_;
+  Trx *trx_;
+  const char *attribute_name;
+  const Value *value;
+  int updated_count_ = 0;
+};
+
+static RC record_reader_update_adapter(Record *record, void *context) {
+  RecordUpdater &record_updater = *(RecordUpdater *)context;
+  RC rc = RC::SUCCESS;
+  rc = record_updater.update_attribute(record);
+  if (rc != RC::SUCCESS) {
+    return rc;
+  }
+  rc = record_updater.update_record(record);
+  return rc;
+}
+
 RC Table::update_record(Trx *trx, const char *attribute_name,
                         const Value *value, int condition_num,
                         const Condition conditions[], int *updated_count) {
-  return RC::GENERIC_ERROR;
+  // get record position
+  CompositeConditionFilter condition_filter;
+  RC rc = condition_filter.init(*this, conditions, condition_num);
+  if (rc != RC::SUCCESS) {
+    return rc;
+  }
+  RecordUpdater updater(*this, trx);
+  updater.set_data(attribute_name, value);
+  rc = scan_record(trx, &condition_filter, -1, &updater,
+                   record_reader_update_adapter);
+  if (updated_count != nullptr) {
+    *updated_count = updater.updated_count();
+  }
+  return rc;
+}
+
+RC Table::update_record(Trx *trx, Record *record) {
+  RC rc = RC::SUCCESS;
+
+  if (trx != nullptr) {
+    trx->init_trx_info(this, *record);
+  }
+  rc = record_handler_->update_record(record);
+
+  if (rc != RC::SUCCESS) {
+    LOG_ERROR("Update record failed. table name=%s, rc=%d:%s",
+              table_meta_.name(), rc, strrc(rc));
+    return rc;
+  }
+
+  if (trx != nullptr) {
+    rc = trx->update_record(this, record);
+    if (rc != RC::SUCCESS) {
+      LOG_ERROR("Failed to log operation(update) to trx");
+
+      // TODO: reset to original data
+//      RC rc2 = record_handler_->delete_record(&record->rid);
+//      if (rc2 != RC::SUCCESS) {
+//        LOG_PANIC(
+//            "Failed to rollback record data when insert index entries failed. "
+//            "table name=%s, rc=%d:%s",
+//            name(), rc2, strrc(rc2));
+//      }
+      return rc;
+    }
+  }
+
+  // delete
+  rc = delete_entry_of_indexes(record->data, record->rid, true);
+  if (rc != RC::SUCCESS) {
+    LOG_ERROR("Failed to delete indexes of record(rid=%d.%d). rc=%d:%s",
+              record->rid.page_num, record->rid.slot_num, rc, strrc(rc));
+  }
+  // insert new index
+  rc = insert_entry_of_indexes(record->data, record->rid);
+  if (rc != RC::SUCCESS) {
+    RC rc2 = delete_entry_of_indexes(record->data, record->rid, true);
+    if (rc2 != RC::SUCCESS) {
+      LOG_PANIC(
+          "Failed to rollback index data when insert index entries failed. "
+          "table name=%s, rc=%d:%s",
+          name(), rc2, strrc(rc2));
+    }
+    rc2 = record_handler_->delete_record(&record->rid);
+    if (rc2 != RC::SUCCESS) {
+      LOG_PANIC(
+          "Failed to rollback record data when insert index entries failed. "
+          "table name=%s, rc=%d:%s",
+          name(), rc2, strrc(rc2));
+    }
+    return rc;
+  }
+
+  return rc;
 }
 
 class RecordDeleter {
@@ -671,6 +837,16 @@ RC Table::rollback_delete(Trx *trx, const RID &rid) {
   }
 
   return trx->rollback_delete(this, record);  // update record in place
+}
+
+RC Table::commit_update(Trx *trx, const RID &rid) {
+  RC rc = RC::SUCCESS;
+  Record record;
+  rc = record_handler_->get_record(&rid, &record);
+  if (rc != RC::SUCCESS) {
+    return rc;
+  }
+  return rc;
 }
 
 RC Table::insert_entry_of_indexes(const char *record, const RID &rid) {

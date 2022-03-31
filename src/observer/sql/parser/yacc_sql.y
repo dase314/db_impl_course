@@ -17,9 +17,13 @@ typedef struct ParserContext {
   size_t from_length;
   size_t value_length;
   Value values[MAX_NUM];
+  size_t tuple_length;
+  InsertTuple tuples[MAX_NUM];
   Condition conditions[MAX_NUM];
   CompOp comp;
-	char id[MAX_NUM];
+  char id[MAX_NUM];
+  size_t func_length;
+  FuncName func[MAX_NUM]; 
 } ParserContext;
 
 //获取子串
@@ -43,7 +47,8 @@ void yyerror(yyscan_t scanner, const char *str)
   context->from_length = 0;
   context->select_length = 0;
   context->value_length = 0;
-  context->ssql->sstr.insertion.value_num = 0;
+  context->tuple_length = 0;
+  memset(context->tuples, 0, sizeof(context->tuples));
   printf("parse sql failed. error=%s", str);
 }
 
@@ -81,6 +86,7 @@ ParserContext *get_context(yyscan_t scanner)
         TRX_COMMIT
         TRX_ROLLBACK
         INT_T
+        DATE_T
         STRING_T
         FLOAT_T
         HELP
@@ -102,6 +108,11 @@ ParserContext *get_context(yyscan_t scanner)
         LE
         GE
         NE
+		AGGMAX
+		AGGMIN
+		AGGCOUNT
+		AGGAVG
+		
 
 %union {
   struct _Attr *attr;
@@ -252,7 +263,8 @@ attr_def:
     |ID_get type
 		{
 			AttrInfo attribute;
-			attr_info_init(&attribute, CONTEXT->id, $2, 4);
+			// 从 1970-01-01 ~ 2038-03-01 有 24896 天，DATE 类型使用两个字节存储
+			attr_info_init(&attribute, CONTEXT->id, $2, $2 == DATES ? 2 : 4);
 			create_table_append_attribute(&CONTEXT->ssql->sstr.create_table, &attribute);
 			// CONTEXT->ssql->sstr.create_table.attributes[CONTEXT->value_length].name=(char*)malloc(sizeof(char));
 			// strcpy(CONTEXT->ssql->sstr.create_table.attributes[CONTEXT->value_length].name, CONTEXT->id); 
@@ -266,6 +278,7 @@ number:
 		;
 type:
 	INT_T { $$=INTS; }
+       | DATE_T { $$=DATES; }
        | STRING_T { $$=CHARS; }
        | FLOAT_T { $$=FLOATS; }
        ;
@@ -276,10 +289,9 @@ ID_get:
 		snprintf(CONTEXT->id, sizeof(CONTEXT->id), "%s", temp);
 	}
 	;
-
 	
 insert:				/*insert   语句的语法解析树*/
-    INSERT INTO ID VALUES LBRACE value value_list RBRACE SEMICOLON 
+    INSERT INTO ID VALUES tuple tuple_list SEMICOLON
 		{
 			// CONTEXT->values[CONTEXT->value_length++] = *$6;
 
@@ -289,11 +301,27 @@ insert:				/*insert   语句的语法解析树*/
 			// for(i = 0; i < CONTEXT->value_length; i++){
 			// 	CONTEXT->ssql->sstr.insertion.values[i] = CONTEXT->values[i];
       // }
-			inserts_init(&CONTEXT->ssql->sstr.insertion, $3, CONTEXT->values, CONTEXT->value_length);
+			inserts_init(&CONTEXT->ssql->sstr.insertion, $3, CONTEXT->tuples, CONTEXT->tuple_length);
 
       //临时变量清零
       CONTEXT->value_length=0;
+      CONTEXT->tuple_length=0;
+      memset(CONTEXT->tuples, 0, sizeof(CONTEXT->tuples));
     }
+
+tuple_list:
+    | COMMA tuple tuple_list {
+    }
+    ;
+
+tuple:
+    | LBRACE value value_list RBRACE {
+    	memcpy(CONTEXT->tuples[CONTEXT->tuple_length].values, CONTEXT->values, sizeof(Value)*CONTEXT->value_length);
+    	CONTEXT->tuples[CONTEXT->tuple_length].value_num = CONTEXT->value_length;
+    	CONTEXT->value_length = 0;
+        CONTEXT->tuple_length++;
+    }
+    ;
 
 value_list:
     /* empty */
@@ -302,14 +330,14 @@ value_list:
 	  }
     ;
 value:
-    NUMBER{	
+    NUMBER{
   		value_init_integer(&CONTEXT->values[CONTEXT->value_length++], $1);
 		}
     |FLOAT{
   		value_init_float(&CONTEXT->values[CONTEXT->value_length++], $1);
 		}
     |SSS {
-			$1 = substr($1,1,strlen($1)-2);
+		$1 = substr($1,1,strlen($1)-2);
   		value_init_string(&CONTEXT->values[CONTEXT->value_length++], $1);
 		}
     ;
@@ -350,6 +378,7 @@ select:				/*  select 语句的语法解析树*/
 			CONTEXT->from_length=0;
 			CONTEXT->select_length=0;
 			CONTEXT->value_length = 0;
+			CONTEXT->func_length=0;
 	}
 	;
 
@@ -369,7 +398,30 @@ select_attr:
 			relation_attr_init(&attr, $1, $3);
 			selects_append_attribute(&CONTEXT->ssql->sstr.selection, &attr);
 		}
+	| ID DOT STAR attr_list {
+		RelAttr attr;
+		relation_attr_init(&attr, $1, "*");
+		selects_append_attribute(&CONTEXT->ssql->sstr.selection, &attr);
+	}
+	| func LBRACE expression RBRACE attr_list {// count(expression)
+	}
     ;
+expression:
+	STAR {// *
+			RelAttr attr;
+			relation_attr_init(&attr, NULL, "*");
+			selects_append_aggregation_attr(&CONTEXT->ssql->sstr.selection, CONTEXT->func[CONTEXT->func_length-1],&attr);
+	}
+	| ID{// age
+			RelAttr attr;
+			relation_attr_init(&attr, NULL, $1);
+			selects_append_aggregation_attr(&CONTEXT->ssql->sstr.selection, CONTEXT->func[CONTEXT->func_length-1],&attr);
+	}
+	| value{ // 1
+			Value *right_value = &CONTEXT->values[CONTEXT->value_length - 1];
+			selects_append_aggregation_value(&CONTEXT->ssql->sstr.selection, CONTEXT->func[CONTEXT->func_length-1],right_value);
+	}
+
 attr_list:
     /* empty */
     | COMMA ID attr_list {
@@ -386,6 +438,14 @@ attr_list:
         // CONTEXT->ssql->sstr.selection.attributes[CONTEXT->select_length].attribute_name=$4;
         // CONTEXT->ssql->sstr.selection.attributes[CONTEXT->select_length++].relation_name=$2;
   	  }
+	| COMMA ID DOT STAR attr_list {
+		RelAttr attr;
+		relation_attr_init(&attr, $2, "*");
+		selects_append_attribute(&CONTEXT->ssql->sstr.selection, &attr);
+	}
+	| COMMA func LBRACE expression RBRACE attr_list{
+
+	}
   	;
 
 rel_list:
@@ -560,6 +620,12 @@ comOp:
     | LE { CONTEXT->comp = LESS_EQUAL; }
     | GE { CONTEXT->comp = GREAT_EQUAL; }
     | NE { CONTEXT->comp = NOT_EQUAL; }
+    ;
+func:
+  	  AGGMAX { CONTEXT->func[CONTEXT->func_length++] = AGG_MAX; }
+    | AGGMIN { CONTEXT->func[CONTEXT->func_length++] = AGG_MIN; }
+    | AGGCOUNT { CONTEXT->func[CONTEXT->func_length++] = AGG_COUNT; }
+    | AGGAVG { CONTEXT->func[CONTEXT->func_length++] = AGG_AVG; }
     ;
 
 load_data:

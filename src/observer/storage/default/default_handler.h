@@ -118,17 +118,17 @@ class DefaultHandler {
                 const char *index_name);
 
   /**
-   * 该函数用来在relName表中插入具有指定属性值的新元组，
-   * nValues为属性值个数，values为对应的属性值数组。
-   * 函数根据给定的属性值构建元组，调用记录管理模块的函数插入该元组，
-   * 然后在该表的每个索引中为该元组创建合适的索引项
+   * 该函数用来在relName表中插入若干新元组，
+   * tuple_num为元组个数，tuples为对应的元组数组。
+   * 函数调用记录管理模块的函数插入元组，
+   * 然后在该表的每个索引中为元组创建合适的索引项
    * @param relName
    * @param nValues
    * @param values
    * @return
    */
   RC insert_record(Trx *trx, const char *dbname, const char *relation_name,
-                   int value_num, const Value *values);
+                   int tuple_num, const InsertTuple *tuples);
 
   /**
    * 该函数用来删除relName表中所有满足指定条件的元组以及该元组对应的索引项。

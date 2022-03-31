@@ -63,6 +63,8 @@ class DefaultConditionFilter : public ConditionFilter {
  private:
   ConDesc left_;
   ConDesc right_;
+  bool left_value_delete = false;
+  bool right_value_delete = false;
   AttrType attr_type_ = UNDEFINED;
   CompOp comp_op_ = NO_OP;
 };

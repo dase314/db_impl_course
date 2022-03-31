@@ -38,8 +38,15 @@ typedef enum {
   NO_OP
 } CompOp;
 
+typedef enum {
+  AGG_MAX,    // max 0
+  AGG_MIN,    // min 1
+  AGG_COUNT,  // count 2
+  AGG_AVG,    // avg 3
+} FuncName;
+
 //属性值类型
-typedef enum { UNDEFINED, CHARS, INTS, FLOATS } AttrType;
+typedef enum { UNDEFINED, CHARS, INTS, DATES, FLOATS } AttrType;
 
 //属性值
 typedef struct _Value {
@@ -60,6 +67,14 @@ typedef struct _Condition {
   Value right_value;   // right-hand side value if right_is_attr = FALSE
 } Condition;
 
+typedef struct {
+  FuncName func_name;  //聚合函数的名称
+  RelAttr attribute;   //聚合的属性
+  // std::string expression_str;  //TODO: 括号内表达式的字符串
+  int is_value;  //表达式是确定的值吗 0=不是 1=是
+  Value *value;  //表达式的值
+} Aggregation;   //聚合函数
+
 // struct of select
 typedef struct {
   size_t attr_num;                // Length of attrs in Select clause
@@ -68,13 +83,21 @@ typedef struct {
   char *relations[MAX_NUM];       // relations in From clause
   size_t condition_num;           // Length of conditions in Where clause
   Condition conditions[MAX_NUM];  // conditions in Where clause
+  size_t aggregation_num;
+  Aggregation aggregations[MAX_NUM];
 } Selects;
+
+
+typedef struct {
+  size_t value_num;       // Length of values
+  Value values[MAX_NUM];  // Values to insert
+} InsertTuple;
 
 // struct of insert
 typedef struct {
   char *relation_name;    // Relation to insert into
-  size_t value_num;       // Length of values
-  Value values[MAX_NUM];  // values to insert
+  size_t tuple_num;       // Length of tuples
+  InsertTuple tuples[MAX_NUM];  // Tuples to insert
 } Inserts;
 
 // struct of delete
@@ -210,10 +233,16 @@ void selects_append_relation(Selects *selects, const char *relation_name);
 void selects_append_conditions(Selects *selects, Condition conditions[],
                                size_t condition_num);
 
+void selects_append_aggregation_attr(Selects *selects, FuncName func_name,
+                                     RelAttr *rel_attr);
+
+void selects_append_aggregation_value(Selects *selects, FuncName func_name,
+                                      Value *value);
+
 void selects_destroy(Selects *selects);
 
-void inserts_init(Inserts *inserts, const char *relation_name, Value values[],
-                  size_t value_num);
+void inserts_init(Inserts *inserts, const char *relation_name, InsertTuple tuples[],
+                  size_t tuple_num);
 
 void inserts_destroy(Inserts *inserts);
 

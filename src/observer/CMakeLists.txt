@@ -17,7 +17,7 @@ MESSAGE("MAIN SRC: " ${MAIN_SRC})
 FOREACH (F ${ALL_SRC})
 
     IF (NOT ${F} STREQUAL ${MAIN_SRC})
-        SET(LIB_SRC ${LIB_SRC} ${F} storage/default/lrucache.hpp)
+        SET(LIB_SRC ${LIB_SRC} ${F})
     ENDIF ()
 
     MESSAGE("Use " ${F})
@@ -56,6 +56,8 @@ MESSAGE("Archive directory:" ${LIBRARY_OUTPUT_PATH})
 ADD_LIBRARY(${PROJECT_NAME}_static STATIC ${LIB_SRC})
 SET_TARGET_PROPERTIES(${PROJECT_NAME}_static PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME}_static ${LIBRARIES})
+ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME}_static POST_BUILD COMMAND ${CMAKE_COMMAND}
+        -E copy ${CMAKE_SOURCE_DIR}/etc/observer_test.ini ${CMAKE_BINARY_DIR}/etc/observer_test.ini)
 
 
 # Target 必须在定义 ADD_EXECUTABLE 之后， programs 不受这个限制

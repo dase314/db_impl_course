@@ -21,7 +21,7 @@ See the Mulan PSL v2 for more details. */
 #include <time.h>
 #include <list>
 #include <vector>
-#include "lrucache.hpp"
+
 #include "rc.h"
 
 typedef int PageNum;
@@ -75,35 +75,69 @@ class BPFileHandle {
 class BPManager {
  public:
   BPManager(int size = BP_BUFFER_SIZE) {
-    //TODO for test
+    this->size = size;
+    frame = new Frame[size];
+    allocated = new bool[size];
+    for (int i = 0; i < size; i++) {
+      allocated[i] = false;
+      frame[i].pin_count = 0;
+    }
   }
 
   ~BPManager() {
-    //TODO for test
+    delete[] frame;
+    delete[] allocated;
+    size = 0;
+    frame = nullptr;
+    allocated = nullptr;
   }
 
   Frame *alloc() {
     // TODO for test
-
+    int freeIndex;
+    for (freeIndex = 0; freeIndex < size; freeIndex++) {
+      if (!allocated[freeIndex]) {
+        break;
+      }
+    }
+    // LRU works
+    if (freeIndex == size) {
+      std::list<int>::iterator itr = LRUList.end();
+      itr--;
+      freeIndex = itr.operator*();
+      frame[freeIndex].file_desc = -1;
+      frame[freeIndex].page.page_num = -1;
+      LRUList.erase(itr);
+    }
+    LRUList.emplace_front(freeIndex);
+    allocated[freeIndex] = true;
+    return &frame[freeIndex];
   }
 
   Frame *get(int file_desc, PageNum page_num) {
     // TODO for test
-
+    for (std::list<int>::iterator itr = LRUList.begin(); itr != LRUList.end(); itr++) {
+      if (frame[itr.operator*()].file_desc == file_desc && frame[itr.operator*()].page.page_num == page_num) {
+        if (itr != LRUList.begin()) {
+          int recentRead = itr.operator*();
+          LRUList.erase(itr);
+          LRUList.emplace_front(recentRead);
+        }
+        return &frame[itr.operator*()];
+      }
+    }
+    return nullptr;
   }
 
-  Frame *getFrame() {
-    // TODO for test
-  }
+  Frame *getFrame() { return frame; }
 
-  bool *getAllocated() {
-    // TODO for test
-  }
+  bool *getAllocated() { return allocated; }
 
  public:
   int size;
   Frame *frame = nullptr;
   bool *allocated = nullptr;
+  std::list<int> LRUList;
 };
 
 class DiskBufferPool {

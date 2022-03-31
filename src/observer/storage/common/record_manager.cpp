@@ -271,6 +271,9 @@ RC RecordPageHandler::get_record(const RID *rid, Record *rec) {
   // rec->valid = true;
   rec->rid = *rid;
   rec->data = data;
+
+  // std::cout<<"get_record: "<<" rid: "<<rec->rid.page_num<<" "<<rec->rid.slot_num<<" data: "<<rec->data<<std::endl;
+
   return RC::SUCCESS;
 }
 

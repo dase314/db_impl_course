@@ -44,6 +44,8 @@ class Tuple {
 
   void add(int value);
 
+  void add(uint16_t value);
+
   void add(float value);
 
   void add(const char *s, int len);
@@ -90,6 +92,7 @@ class TupleSchema {
   ~TupleSchema() = default;
 
   void add(AttrType type, const char *table_name, const char *field_name);
+  void add(const TupleField &otherfield);
 
   void add_if_not_exists(AttrType type, const char *table_name,
                          const char *field_name);

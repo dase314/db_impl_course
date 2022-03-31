@@ -1,5 +1,0 @@
-if(EXISTS "/Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug/unitest/pidfile_test[1]_tests.cmake")
-  include("/Users/rehoboamw/Lesson/db_impl_course/cmake-build-debug/unitest/pidfile_test[1]_tests.cmake")
-else()
-  add_test(pidfile_test_NOT_BUILT pidfile_test_NOT_BUILT)
-endif()

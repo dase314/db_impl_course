@@ -66,11 +66,16 @@ QUOTE            [\'\"]
 [Cc][Oo][Mm][Mm][Ii][Tt]                 RETURN_TOKEN(TRX_COMMIT);
 [Rr][Oo][Ll][Ll][Bb][Aa][Cc][Kk]         RETURN_TOKEN(TRX_ROLLBACK);
 [Ii][Nn][Tt]					                   RETURN_TOKEN(INT_T);
+[Dd][Aa][Tt][Ee]                                  RETURN_TOKEN(DATE_T);
 [Cc][Hh][Aa][Rr]				                 RETURN_TOKEN(STRING_T);
 [Ff][Ll][Oo][Aa][Tt]			               RETURN_TOKEN(FLOAT_T);
 [Ll][Oo][Aa][Dd]			                   RETURN_TOKEN(LOAD);
 [Dd][Aa][Tt][Aa]	                       RETURN_TOKEN(DATA);
 [Ii][Nn][Ff][Ii][Ll][Ee]                 RETURN_TOKEN(INFILE);
+[Mm][Aa][Xx]                 RETURN_TOKEN(AGGMAX);
+[Mm][Ii][Nn]                RETURN_TOKEN(AGGMIN);
+[Cc][Oo][Uu][Nn][Tt]                 RETURN_TOKEN(AGGCOUNT);
+[Aa][Vv][Gg]                RETURN_TOKEN(AGGAVG);
 {ID}							                       yylval->string=strdup(yytext); RETURN_TOKEN(ID);
 "("								                       RETURN_TOKEN(LBRACE);
 ")"								                       RETURN_TOKEN(RBRACE);

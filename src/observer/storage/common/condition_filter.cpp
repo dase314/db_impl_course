@@ -17,6 +17,7 @@ See the Mulan PSL v2 for more details. */
 
 #include "common/log/log.h"
 #include "record_manager.h"
+#include "sql/executor/value.h"
 #include "storage/common/table.h"
 
 using namespace common;
@@ -35,7 +36,15 @@ DefaultConditionFilter::DefaultConditionFilter() {
   right_.value = nullptr;
 }
 
-DefaultConditionFilter::~DefaultConditionFilter() {}
+DefaultConditionFilter::~DefaultConditionFilter() {
+  // 目前只会为 Date 类型单独开辟空间
+  if (left_value_delete) {
+    delete (uint16_t *)left_.value;
+  }
+  if (right_value_delete) {
+    delete (uint16_t *)right_.value;
+  }
+}
 
 RC DefaultConditionFilter::init(const ConDesc &left, const ConDesc &right,
                                 AttrType attr_type, CompOp comp_op) {
@@ -113,6 +122,31 @@ RC DefaultConditionFilter::init(Table &table, const Condition &condition) {
     right.attr_offset = 0;
   }
 
+  if (!right.is_attr && type_right == CHARS && left.is_attr &&
+      type_left == DATES) {
+    type_right = DATES;
+    auto date_value = new uint16_t;
+    RC rc = serialize_date(date_value, (const char *)right.value);
+    if (rc != RC::SUCCESS) {
+      delete date_value;
+      return RC::INVALID_ARGUMENT;
+    }
+    right.value = date_value;
+    right_value_delete = true;
+  }
+  if (!left.is_attr && type_left == CHARS && right.is_attr &&
+      type_right == DATES) {
+    type_left = DATES;
+    auto date_value = new uint16_t;
+    RC rc = serialize_date(date_value, (const char *)left.value);
+    if (rc != RC::SUCCESS) {
+      delete date_value;
+      return RC::INVALID_ARGUMENT;
+    }
+    left.value = date_value;
+    left_value_delete = true;
+  }
+
   // 校验和转换
   //  if (!field_type_compare_compatible_table[type_left][type_right]) {
   //    // 不能比较的两个字段， 要把信息传给客户端
@@ -155,6 +189,11 @@ bool DefaultConditionFilter::filter(const Record &rec) const {
       int left = *(int *)left_value;
       int right = *(int *)right_value;
       cmp_result = left - right;
+    } break;
+    case DATES: {
+      uint16_t left = *(uint16_t *)left_value;
+      uint16_t right = *(uint16_t *)right_value;
+      cmp_result = (int)left - (int)right;
     } break;
     case FLOATS: {
       float left = *(float *)left_value;

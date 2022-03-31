@@ -26,6 +26,7 @@ See the Mulan PSL v2 for more details. */
 #include "common/seda/stage_factory.h"
 #include "ini_setting.h"
 #include "session/session_stage.h"
+#include "session/fake_session_stage.h"
 #include "sql/executor/execute_stage.h"
 #include "sql/optimizer/optimize_stage.h"
 #include "sql/parser/parse_stage.h"
@@ -135,6 +136,10 @@ void cleanup_log() {
 }
 
 int prepare_init_seda() {
+  // For test purpose only
+  static StageFactory fake_session_stage_factory("FakeSessionStage",
+                                                 &FakeSessionStage::make_stage);
+
   static StageFactory session_stage_factory("SessionStage",
                                             &SessionStage::make_stage);
   static StageFactory resolve_stage_factory("ResolveStage",
