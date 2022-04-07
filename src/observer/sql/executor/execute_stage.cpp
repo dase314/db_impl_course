@@ -212,6 +212,69 @@ void end_trx_if_need(Session *session, Trx *trx, bool all_right) {
   }
 }
 
+std::string agg_to_string(Aggregation agg) {
+  std::string res = "";
+  //TODO 构造聚合函数名字
+  switch (agg.func_name) {
+    //TODO AGG_MAX
+    //TODO AGG_MIN
+    //TODO AGG_COUNT
+    //TODO AGG_AVG
+  }
+  res += "(";
+  if (1 == agg.is_value) {
+    AttrType type = agg.value->type;
+    void *val = agg.value->data;
+    std::string str;
+    //TODO 构造输出表达字符串
+    switch (type) {
+      //TODO INT
+      //TODO FLOAT
+      //TODO DATES
+    }
+  }
+  else{
+    //TODO 如果有relation_name和field_name的话也要添加
+  }
+  res += ")";
+  return res;
+}
+
+void aggregation_exec(const Selects &selects, TupleSet *res_tuples) {
+  if (selects.aggregation_num > 0) {
+    TupleSchema agg_schema;
+    //TODO 设置schema
+    //TODO 依次添加字段值
+    Tuple out;
+    for (size_t i = 0; i < selects.aggregation_num; i++) {
+      const Aggregation &agg = selects.aggregations[i];
+      const std::vector<Tuple> &tuples = res_tuples->tuples();
+      switch (agg.func_name) {
+        case FuncName::AGG_MAX:
+        case FuncName::AGG_MIN: {
+          //TODO 遍历所有元组，获取最值
+          //TODO 增加这条记录
+        }
+        case FuncName::AGG_COUNT: {
+          // 值为size的大小
+          //TODO 增加这条记录
+        }
+        case FuncName::AGG_AVG: {
+          //TODO 遍历所有元组，获取和
+          float sum = 0;
+          //TODO 增加这条记录
+          break;
+        }
+      }
+    }
+    //等所有值都计算完再去清除res
+    res_tuples->clear();
+    res_tuples->set_schema(agg_schema);
+    res_tuples->add(std::move(out));
+  }
+  return;
+}
+
 // 需要满足多表联查条件
 bool match_join_condition(const Tuple *res_tuple,
                           const std::vector<std::vector<int>> condition_idxs) {
@@ -328,9 +391,11 @@ RC ExecuteStage::do_select(const char *db, const Query *sql,
     //TODO 元组的拼接需要实现笛卡尔积
     //TODO 将符合连接条件的元组添加到print_tables中
 
+    //TODO 添加聚合算子
       print_tuples.print(ss);
     } else {
-      // 当前只查询一张表，直接返回结果即可
+    //TODO 添加聚合算子
+    // 当前只查询一张表，直接返回结果即可
       tuple_sets.front().print(ss);
     }
     for (SelectExeNode *&tmp_node: select_nodes) {
@@ -422,7 +487,28 @@ RC create_selection_executor(Trx *trx, const Selects &selects, const char *db,
 
   //如果是聚合函数：count/min/max/avg(PARAMETER)，直接select PARAMETER
   if (selects.aggregation_num > 0 && selects.attr_num == 0) {
-    //TODO
+    for (int i = selects.aggregation_num - 1; i >= 0; i--) {
+      if (1 == selects.aggregations[i].is_value) {
+        // 列出这张表所有字段
+        TupleSchema::from_table(table, schema);
+        break;  // 没有校验，给出* 之后，再写字段的错误
+      }
+      const RelAttr &attr = selects.aggregations[i].attribute;
+      if (nullptr == attr.relation_name ||
+          0 == strcmp(table_name, attr.relation_name)) {
+        if (0 == strcmp("*", attr.attribute_name)) {
+          // 列出这张表所有字段
+          TupleSchema::from_table(table, schema);
+          break;
+        } else {
+          // 列出这张表相关字段
+          RC rc = schema_add_field(table, attr.attribute_name, schema);
+          if (rc != RC::SUCCESS) {
+            return rc;
+          }
+        }
+      }
+    }
   } else {  // 正常的投影操作
     for (int i = selects.attr_num - 1; i >= 0; i--) {
       const RelAttr &attr = selects.attributes[i];
