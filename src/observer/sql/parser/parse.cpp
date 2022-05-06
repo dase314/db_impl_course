@@ -40,6 +40,23 @@ void relation_attr_destroy(RelAttr *relation_attr)
   relation_attr->attribute_name = nullptr;
 }
 
+void relation_order_init(OrderDescription *order_desc, const char *relation_name, const char *attribute_name, OrderType order_type){
+  if (relation_name != nullptr) {
+    order_desc->relation_name = strdup(relation_name);
+  } else {
+    order_desc->relation_name = nullptr;
+  }
+  order_desc->attribute_name = strdup(attribute_name);
+  order_desc->type = order_type;
+}
+
+void selects_append_orders(Selects *selects, OrderDescription orders[], size_t order_num){
+  for (size_t i = 0; i < order_num; i++) {
+    selects->order_des[i] = orders[i];
+  }
+  selects->order_num = order_num;
+}
+
 void value_init_integer(Value *value, int v)
 {
   value->type = INTS;
