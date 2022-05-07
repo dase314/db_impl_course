@@ -26,7 +26,7 @@
 |E1| Distributed Database Architecture | Reading: Share-noting, Share-data. Cloud Database                                       |E2| Storage| Reading: Data Partition, Consistent Hashing|     
 |E3| Storage | Reading: More On LSM-tree     |E4| Transaction| Reading: Distributed Concurrency Control|  
 |E5| Transaction | Reading: Atomic Commit     |E6|Consensus| Reading: There is more on consensus|  
-|E7|  Transaction+Consensus | Reading: Paxos Commit     |E8| New Trend| Reading: Hardwares, Memory Computing|  
+|E7|  Transaction+Consensus | Reading: Paxos Commit     |E8| Query| Reading: Exchange, Map-Reduce, Massive Parallel Execution|  
 
 
 
