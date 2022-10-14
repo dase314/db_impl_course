@@ -369,6 +369,9 @@ RC RecordFileHandler::insert_record(const char *data, int record_size,
     } else {
       current_page_num = 0;
     }
+  } else if (current_page_num > 0) {
+    // 要初始化一下，因为上次执行这个函数结束时，deinit了。
+    record_page_handler_.init(*disk_buffer_pool_, file_id_, current_page_num);
   }
 
   bool page_found = false;
@@ -383,10 +386,7 @@ RC RecordFileHandler::insert_record(const char *data, int record_size,
       ret = record_page_handler_.init(*disk_buffer_pool_, file_id_,
                                       current_page_num);
       if (ret != RC::SUCCESS && ret != RC::BUFFERPOOL_INVALID_PAGE_NUM) {
-        LOG_ERROR(
-            "Failed to init record page handler. page number is %d. ret=%d:%s",
-            current_page_num, ret, strrc(ret));
-        return ret;
+        continue;
       }
     }
 
@@ -423,8 +423,15 @@ RC RecordFileHandler::insert_record(const char *data, int record_size,
     }
   }
 
+  // test
+  LOG_INFO("miniob bpmanager: after inserting record, the elements in lru cache is: ");
+  disk_buffer_pool_->bp_manager_.printLruCache();
+
   // 找到空闲位置
-  return record_page_handler_.insert_record(data, rid);
+  RC rc = record_page_handler_.insert_record(data, rid);
+  // 将page给Unpin了。
+  record_page_handler_.deinit();
+  return rc;
 }
 
 RC RecordFileHandler::update_record(const Record *rec) {
@@ -484,6 +491,10 @@ RC RecordFileScanner::open_scan(DiskBufferPool &buffer_pool, int file_id,
   file_id_ = file_id;
 
   condition_filter_ = condition_filter;
+
+  if (record_page_handler_.get_page_num() > 0) {
+    record_page_handler_.init(buffer_pool, file_id, record_page_handler_.get_page_num());
+  }
   return RC::SUCCESS;
 }
 
@@ -495,6 +506,8 @@ RC RecordFileScanner::close_scan() {
   if (condition_filter_ != nullptr) {
     condition_filter_ = nullptr;
   }
+
+  record_page_handler_.deinit(); // 为了将页给unpin了
 
   return RC::SUCCESS;
 }

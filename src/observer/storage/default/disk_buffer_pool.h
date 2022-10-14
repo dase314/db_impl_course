@@ -25,13 +25,17 @@ See the Mulan PSL v2 for more details. */
 #include "rc.h"
 
 typedef int PageNum;
+/** 
+ * 用于描述一个页，int表示file_desc文件描述符，PageNum表示一个表的页号
+ */
+typedef std::pair<int, PageNum> BufferTag;
 
 //
 #define BP_INVALID_PAGE_NUM (-1)
 #define BP_PAGE_SIZE (1 << 12)
 #define BP_PAGE_DATA_SIZE (BP_PAGE_SIZE - sizeof(PageNum))
 #define BP_FILE_SUB_HDR_SIZE (sizeof(BPFileSubHeader))
-#define BP_BUFFER_SIZE 50
+#define BP_BUFFER_SIZE 8
 #define MAX_OPEN_FILE 1024
 
 typedef struct {
@@ -72,42 +76,92 @@ class BPFileHandle {
   BPFileSubHeader *file_sub_header;
 };
 
+/** 
+ * BPManager中lrucache对象需要用到的哈希函数，来将BufferTag进行哈希计算
+ */
+struct hash_func {
+  size_t operator()(const BufferTag &x) const {
+		return std::hash<int>{}(x.first) ^ std::hash<PageNum>{}(x.second);
+	}
+};
+
+class DiskBufferPool;
+
 class BPManager {
  public:
-  BPManager(int size = BP_BUFFER_SIZE) {
+
+  BPManager(DiskBufferPool *pool, int size = BP_BUFFER_SIZE) {
     //TODO for test
+    // 1. 分配frame数组，并初始化
+    frame = new Frame[BP_BUFFER_SIZE];
+    memset(frame, 0, sizeof(Frame) * BP_BUFFER_SIZE);
+    // 2. 分配allocated数组，并初始化
+    allocated = new bool[BP_BUFFER_SIZE];
+    memset(allocated, 0, sizeof(bool) * BP_BUFFER_SIZE);
+    // 3. 给size赋值
+    this->size = BP_BUFFER_SIZE;
+    // 4. 给disk_buffer_pool赋值
+    disk_buffer_pool = pool;
   }
 
   ~BPManager() {
     //TODO for test
+    // 1. 释放frame的空间
+    delete[] frame;
+    // 2. 释放allocated的空间
+    delete[] allocated;
   }
 
-  Frame *alloc() {
-    // TODO for test
-
-  }
-
+  Frame *alloc(int file_desc, PageNum page_num);
+  
   Frame *get(int file_desc, PageNum page_num) {
-    // TODO for test
-
+    /** 
+     * @todo
+     * 1. 如果lru cache中存在这个页，则将它返回
+     * 2. 如果lru cache中不存在这个页，则返回nullptr
+     */
+    
+    return nullptr;
   }
 
   Frame *getFrame() {
-    // TODO for test
+    /** 
+     * @todo
+     * 返回frame数组
+     */
+
+    return nullptr;
   }
 
   bool *getAllocated() {
-    // TODO for test
+    /** 
+     * @todo
+     * 返回allocated数组
+     */
+
+    return nullptr;
   }
+  
+  void printLruCache();
 
  public:
   int size;
+  // 所有的空闲和已分配的Frame，容量是size
   Frame *frame = nullptr;
+  // allocated表示frame中的哪些是已经分配了的了，为true表示已经分配了，为false则未被分配
+  // 如果allocated全是true，则lru cache满了。容量是size
   bool *allocated = nullptr;
+  DiskBufferPool *disk_buffer_pool = nullptr;
+  // 如果在声明cache::lru_cache时不指定hash_func，则会编译失败，因为编译器无法对BufferTag设置一个哈希函数
+  // lru cache中存储的key是BufferTag，value是frame数组的下标
+  // 通过get(buffer_tag, &idx); frame[idx] 可以访问到buffer_tag对应的缓存页
+  cache::lru_cache<BufferTag, int, hash_func> lrucache{BP_BUFFER_SIZE + 5};
 };
 
 class DiskBufferPool {
+  friend class BPManager;
  public:
+  DiskBufferPool() : bp_manager_{this} {}
   /**
    * 创建一个名称为指定文件名的分页文件
    */
@@ -173,6 +227,11 @@ class DiskBufferPool {
    */
   RC unpin_page(BPPageHandle *page_handle);
 
+  RC pin_page(BPPageHandle *page_handle) {
+    page_handle->open = true;
+    page_handle->frame->pin_count++;
+  }
+
   /**
    * 获取文件的总页数
    */
@@ -181,7 +240,7 @@ class DiskBufferPool {
   RC flush_all_pages(int file_id);
 
  protected:
-  RC allocate_block(Frame **buf);
+  RC allocate_block(int file_desc, PageNum page_num, Frame **buf);
 
   RC dispose_block(Frame *buf);
 
@@ -202,7 +261,7 @@ class DiskBufferPool {
 
   RC flush_block(Frame *frame);
 
- private:
+ public:
   BPManager bp_manager_;
   BPFileHandle *open_list_[MAX_OPEN_FILE] = {nullptr};
 };
