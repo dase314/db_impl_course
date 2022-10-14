@@ -84,7 +84,7 @@ class RecordPageHandler {
 
   bool is_full() const;
 
- private:
+ public:
   DiskBufferPool *disk_buffer_pool_;
   int file_id_;
   BPPageHandle page_handle_;

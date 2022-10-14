@@ -31,6 +31,49 @@ DiskBufferPool *theGlobalDiskBufferPool() {
   return instance;
 }
 
+/** 
+ * 判断页是否被Pin住
+ */
+bool not_pinned(const std::pair<BufferTag, int>& kv, void *ctx) {
+  int value = kv.second;
+  BPManager* mg = (BPManager*)(ctx);
+  return mg->frame[value].pin_count == 0;
+}
+
+Frame *BPManager::alloc(int file_desc, PageNum page_num) {
+  /** 
+   * @todo
+   * 1. 如果lru cache的大小比size小,则将这个空闲页插入到lru cache中
+   *    并设置allocated中相应位是true
+   * 2. 如果lru cache已经满了（和size一样大），则需要根据LRU算法来进行替换
+   *    也即将最近最少使用的页给刷新到磁盘，并将这个页给替换了。
+   * 
+   * 提示：调用BufferTag victim; lrucache.getVictim(&victim, not_pinned, (void*)(this) 来获得最近最少使用的页
+   * 提示：调用disk_buffer_pool->flush_block()来刷新到磁盘
+   * 提示：调用lrucache.victim(victim, new_buffer_tag) 来将vitim页给替换了。
+   */
+  
+  return nullptr;
+}
+
+void BPManager::printLruCache() {
+    // 输出lru cache中的内容，从head输出到tail，head表示最近访问的页，tail表示最近最少使用的页
+    // 输出格式是：<file_id>:<page_num>:<buffer index>  其中buffer_index表示这个页在buffer中的下标
+    for (auto it = lrucache._cache_items_list.begin(); it != lrucache._cache_items_list.end(); it++) {
+      int file_desc = it->first.first;
+      int page_num = it->first.second;
+      int buffer_index = it->second;
+      int i;
+      for (i = 0; disk_buffer_pool->open_list_[i]; i++) {
+        if (disk_buffer_pool->open_list_[i]->file_desc == file_desc) {
+          break;
+        }
+      }
+      printf("%d:%d:%d ", i, page_num, buffer_index);
+    }
+    printf("\n");
+  }
+
 RC DiskBufferPool::create_file(const char *file_name) {
   int fd = open(file_name, O_RDWR | O_CREAT | O_EXCL, S_IREAD | S_IWRITE);
   if (fd < 0) {
@@ -122,7 +165,7 @@ RC DiskBufferPool::open_file(const char *file_name, int *file_id) {
   cloned_file_name[file_name_len - 1] = '\0';
   file_handle->file_name = cloned_file_name;
   file_handle->file_desc = fd;
-  if ((tmp = allocate_block(&file_handle->hdr_frame)) != RC::SUCCESS) {
+  if ((tmp = allocate_block(file_handle->file_desc, 0, &file_handle->hdr_frame)) != RC::SUCCESS) {
     LOG_ERROR("Failed to allocate block for %s's BPFileHandle.", file_name);
     delete file_handle;
     close(fd);
@@ -178,6 +221,9 @@ RC DiskBufferPool::close_file(int file_id) {
   return RC::SUCCESS;
 }
 
+/** 
+ * page_num必定在这个表中，并且是已经分配的了，否则就会返回错误。见check_page_num()函数
+ */
 RC DiskBufferPool::get_this_page(int file_id, PageNum page_num,
                                  BPPageHandle *page_handle) {
   RC tmp;
@@ -194,26 +240,21 @@ RC DiskBufferPool::get_this_page(int file_id, PageNum page_num,
     return tmp;
   }
 
-  for (int i = 0; i < BP_BUFFER_SIZE; i++) {
-    if (!bp_manager_.allocated[i]) continue;
-    if (bp_manager_.frame[i].file_desc != file_handle->file_desc) continue;
-
-    // This page has been loaded.
-    if (bp_manager_.frame[i].page.page_num == page_num) {
-      page_handle->frame = bp_manager_.frame + i;
-      page_handle->frame->pin_count++;
-      page_handle->frame->acc_time = current_time();
-      page_handle->open = true;
-      return RC::SUCCESS;
-    }
+  Frame *frame = bp_manager_.get(file_handle->file_desc, page_num);
+  if (frame) {
+    page_handle->frame = frame;
+    page_handle->frame->pin_count++;
+    page_handle->frame->acc_time = current_time();
+    page_handle->open = true;
+    return RC::SUCCESS;
   }
 
   // Allocate one page and load the data into this page
-  if ((tmp = allocate_block(&(page_handle->frame))) != RC::SUCCESS) {
-    LOG_ERROR("Failed to load page %s:%d, due to failed to alloc page.",
-              file_handle->file_name, page_num);
-    return tmp;
+  frame = bp_manager_.alloc(file_handle->file_desc, page_num);
+  if (frame == nullptr) {
+    return RC::BUFFERPOOL_NOBUF;
   }
+  page_handle->frame = frame;
   page_handle->frame->dirty = false;
   page_handle->frame->file_desc = file_handle->file_desc;
   page_handle->frame->pin_count = 1;
@@ -230,6 +271,12 @@ RC DiskBufferPool::get_this_page(int file_id, PageNum page_num,
   return RC::SUCCESS;
 }
 
+/** 
+ * allocate_page()函数会首先判断还有一些页没有被分配：0号页中的bitmap就保存了
+ * 哪些页是被分配的。NOTE: 没有被分配的页是不保存元组数据的
+ * 
+ * 如果所有页都已经被分配了，则需要再次拓展一个页，这个时候调用allocate_block()
+ */
 RC DiskBufferPool::allocate_page(int file_id, BPPageHandle *page_handle) {
   RC tmp;
   if ((tmp = check_file_id(file_id)) != RC::SUCCESS) {
@@ -254,7 +301,7 @@ RC DiskBufferPool::allocate_page(int file_id, BPPageHandle *page_handle) {
     }
   }
 
-  if ((tmp = allocate_block(&(page_handle->frame))) != RC::SUCCESS) {
+  if ((tmp = allocate_block(file_handle->file_desc, file_handle->file_sub_header->page_count, &(page_handle->frame))) != RC::SUCCESS) {
     LOG_ERROR("Failed to allocate page %s, due to no free page.",
               file_handle->file_name);
     return tmp;
@@ -332,18 +379,18 @@ RC DiskBufferPool::dispose_page(int file_id, PageNum page_num) {
     return rc;
   }
 
-  for (int i = 0; i < BP_BUFFER_SIZE; i++) {
-    if (!bp_manager_.allocated[i]) continue;
-    if (bp_manager_.frame[i].file_desc != file_handle->file_desc) {
-      continue;
-    }
+  // for (int i = 0; i < BP_BUFFER_SIZE; i++) {
+  //   if (!bp_manager_.allocated[i]) continue;
+  //   if (bp_manager_.frame[i].file_desc != file_handle->file_desc) {
+  //     continue;
+  //   }
 
-    if (bp_manager_.frame[i].page.page_num == page_num) {
-      if (bp_manager_.frame[i].pin_count != 0)
-        return RC::BUFFERPOOL_PAGE_PINNED;
-      bp_manager_.allocated[i] = false;
-    }
-  }
+  //   if (bp_manager_.frame[i].page.page_num == page_num) {
+  //     if (bp_manager_.frame[i].pin_count != 0)
+  //       return RC::BUFFERPOOL_PAGE_PINNED;
+  //     bp_manager_.allocated[i] = false;
+  //   }
+  // }
 
   file_handle->hdr_frame->dirty = true;
   file_handle->file_sub_header->allocated_pages--;
@@ -395,7 +442,7 @@ RC DiskBufferPool::force_page(BPFileHandle *file_handle, PageNum page_num) {
         return rc;
       }
     }
-    bp_manager_.allocated[i] = false;
+    // bp_manager_.allocated[i] = false;
     return RC::SUCCESS;
   }
   return RC::SUCCESS;
@@ -425,7 +472,7 @@ RC DiskBufferPool::force_all_pages(BPFileHandle *file_handle) {
         return rc;
       }
     }
-    bp_manager_.allocated[i] = false;
+    // bp_manager_.allocated[i] = false;
   }
   return RC::SUCCESS;
 }
@@ -453,47 +500,18 @@ RC DiskBufferPool::flush_block(Frame *frame) {
   return RC::SUCCESS;
 }
 
-RC DiskBufferPool::allocate_block(Frame **buffer) {
-  // There is one Frame which is free.
-  for (int i = 0; i < BP_BUFFER_SIZE; i++) {
-    if (!bp_manager_.allocated[i]) {
-      bp_manager_.allocated[i] = true;
-      *buffer = bp_manager_.frame + i;
-      LOG_DEBUG("Allocate block frame=%p", bp_manager_.frame + i);
-      return RC::SUCCESS;
-    }
+/** 
+ * 单纯地从缓存管理器中分配一个Frame，这个Frame是没有初始化的，需要调用者去初始化
+ * 详见allocate_page()
+ */
+RC DiskBufferPool::allocate_block(int file_desc, PageNum page_num, Frame **buffer) {
+  Frame* tmp = bp_manager_.alloc(file_desc, page_num);
+  if (tmp) {
+    *buffer = tmp;
+    return RC::SUCCESS;
+  } else {
+    return RC::BUFFERPOOL_NOBUF;
   }
-
-  int min = 0;
-  unsigned long mintime = 0;
-  bool flag = false;
-  for (int i = 0; i < BP_BUFFER_SIZE; i++) {
-    if (bp_manager_.frame[i].pin_count != 0) continue;
-    if (!flag) {
-      flag = true;
-      min = i;
-      mintime = bp_manager_.frame[i].acc_time;
-    }
-    if (bp_manager_.frame[i].acc_time < mintime) {
-      min = i;
-      mintime = bp_manager_.frame[i].acc_time;
-    }
-  }
-  if (!flag) {
-    LOG_ERROR("All pages have been used and pinned.");
-    return RC::NOMEM;
-  }
-
-  if (bp_manager_.frame[min].dirty) {
-    RC rc = flush_block(&(bp_manager_.frame[min]));
-    if (rc != RC::SUCCESS) {
-      LOG_ERROR("Failed to flush block of %d for %d.", min,
-                bp_manager_.frame[min].file_desc);
-      return rc;
-    }
-  }
-  *buffer = bp_manager_.frame + min;
-  return RC::SUCCESS;
 }
 
 RC DiskBufferPool::dispose_block(Frame *buf) {
