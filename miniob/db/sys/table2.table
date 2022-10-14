@@ -1,0 +1,28 @@
+{
+	"fields" : 
+	[
+		{
+			"len" : 4,
+			"name" : "__trx",
+			"offset" : 0,
+			"type" : "ints",
+			"visible" : false
+		},
+		{
+			"len" : 4,
+			"name" : "c1",
+			"offset" : 4,
+			"type" : "ints",
+			"visible" : true
+		},
+		{
+			"len" : 4,
+			"name" : "c2",
+			"offset" : 8,
+			"type" : "ints",
+			"visible" : true
+		}
+	],
+	"indexes" : null,
+	"table_name" : "table2"
+}
