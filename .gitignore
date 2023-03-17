@@ -1,0 +1,9 @@
+build/
+cmake-build-debug/
+observer.log.*
+deps/googletest/
+deps/jsoncpp/
+deps/libevent/
+.idea/
+.vscode/
+.vscode-server/

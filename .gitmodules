@@ -1,0 +1,9 @@
+[submodule "deps/libevent"]
+	path = deps/libevent
+	url = https://github.com/libevent/libevent
+[submodule "deps/googletest"]
+	path = deps/googletest
+	url = https://github.com/google/googletest
+[submodule "jsoncpp"]
+	path = jsoncpp
+	url = https://gitee.com/zhouhuahui/jsoncpp.git
