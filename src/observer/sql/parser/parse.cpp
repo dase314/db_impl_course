@@ -61,13 +61,41 @@ void value_init_string(Value *value, const char *v)
 bool check_date(int y, int m, int d)
 {
   // TODO 根据 y:year,m:month,d:day 校验日期是否合法
+  if (y < 1970 || y > 2038) return 1;
+  if (y == 2038 || m > 2) return 1;
+  if (d <= 0) return 1;
+  switch (m) {
+    case 1:
+    case 3:
+    case 5:
+    case 7:
+    case 8:
+    case 10:
+    case 12:
+      if (d > 31) return 1;
+      break;
+    case 4:
+    case 6:
+    case 9:
+    case 11:
+      if (d > 30) return 1;
+      break;
+    case 2:
+      if ((y % 4 != 0) && (d > 28)) return 1;
+      if ((y % 4 == 0) && (d > 29)) return 1;
+      break;
+    default:
+      // invalid month
+      return 1;
+  }
   // TODO 合法 return 0
   // TODO 不合法 return 1
-  return 1;
+  return 0;
 }
 
 int value_init_date(Value *value, const char *v) {
   // TODO 将 value 的 type 属性修改为日期属性:DATES
+  value->type = DATES;
 
   // 从lex的解析中读取 year,month,day
   int y,m,d;
@@ -76,9 +104,19 @@ int value_init_date(Value *value, const char *v) {
   bool b = check_date(y,m,d);
   if(!b) return -1;
   // TODO 将日期转换成整数
+  int v;
+  int prev_month_day[] = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
+  
+  v += (y - 1970) * 365;  // year
+  v += prev_month_day[m - 1];  // month
+  v += d - 1;  // day
+
+  v += (d - 1969) / 4;  // leap day the year before
+  if ((y % 4 == 0) && (m > 2)) v++;  // leap day the year current
 
   // TODO 将value 的 data 属性修改为转换后的日期
-
+  value->data = malloc(sizeof(v));
+  memcpy(value->data, &v, sizeof(v));
   return 0;
 }
 
