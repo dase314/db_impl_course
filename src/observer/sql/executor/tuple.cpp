@@ -256,12 +256,57 @@ void TupleRecordConverter::add_record(const char *record)
         tuple.add(s, strlen(s));
       } break;
       case DATES: {
-        // TODO 从record中读取存储的日期
+        // // TODO 从record中读取存储的日期
+        // int value = *(int *)(record + field_meta->offset());
+        // // TODO 将日期转换为满足输出格式的字符串，注意这里月份和天数，不足两位时需要填充0
+        // const int s_len = 11;
+        // char s[s_len];
+        // bool leaped = false;
+        // bool leaping = false;
+        // int y, m, d;
 
-        // TODO 将日期转换为满足输出格式的字符串，注意这里月份和天数，不足两位时需要填充0
+        // // compute year "y"
+        // y = 1970 + value / 1461 * 4;
+        // value %= 1461;
+        // printf("value = %d\n", value);
+        // if (value < 730) {
+        //     if (value >= 365) {
+        //         y += 1;
+        //         value -= 365;
+        //     }
+        // } else {
+        //     if (value < 1096) {
+        //         if (value > 789) leaped = true;
+        //         else if (value == 789) leaping = true;
+        //         y += 2;
+        //         value -= 730;
+        //     } else {
+        //         y += 3;
+        //         value -= 1096;
+        //     }
+        // }
+        
+        // if (leaping) {
+        //     m = 2;
+        //     d = 29;
+        // } else {
+        //     if (!leaped) value++;
 
-        // TODO 将字符串添加到tuple中
+        //     // compute month "m"
+        //     int prev_month_day[] = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
+        //     m = std::lower_bound(prev_month_day, prev_month_day+12, value) - prev_month_day;
 
+        //     // compute day "d"
+        //     d = value - prev_month_day[m - 1];
+        // }
+        
+        // snprintf(s, s_len, "%d-%02d-%02d\n", y, m, d);
+
+        // // TODO 将字符串添加到tuple中
+        // tuple.add(s, strlen(s));
+
+        const char *s = record + field_meta->offset();
+        tuple.add(s, strlen(s));
       }break;
       default: {
         LOG_PANIC("Unsupported field type. type=%d", field_meta->type());
