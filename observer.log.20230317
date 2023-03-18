@@ -463,3 +463,1577 @@ ThreadPools=SQLThre
 [2023-3-17 16:2:28 pid:2154 tid:7fe768ffec00  INFO: disk_buffer_pool.cpp close_file 269]>>Successfully close file 3:./miniob/db/sys/table4.data.
 [2023-3-17 16:2:28 pid:2154 tid:7fe768ffec00  INFO: table.cpp ~Table 53]>>Table has been closed: table4
 [2023-3-17 16:2:28 pid:2154 tid:7fe768ffec00  INFO: db.cpp ~Db 33]>>Db has been closed: sys
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: init.cpp init 201]>>Output configuration 
+Begin dump configuration
+[]
+
+[DefaultStorageStage]
+BaseDir=./miniob
+SystemDb=sys
+ThreadId=IOThreads
+
+[DefaultThreads]
+count=3
+
+[ExecuteStage]
+NextStages=DefaultStorageStage,MemStorageStage
+ThreadId=SQLThreads
+
+[IOThreads]
+count=3
+
+[LOG]
+LOG_CONSOLE_LEVEL=1
+LOG_FILE_LEVEL=3
+LOG_FILE_NAME=observer.log
+
+[MemStorageStage]
+ThreadId=IOThreads
+
+[MetricsStage]
+NextStages=TimerStage
+
+[NET]
+CLIENT_ADDRESS=INADDR_ANY
+MAX_CONNECTION_NUM=8192
+PORT=6789
+
+[OptimizeStage]
+NextStages=ExecuteStage
+ThreadId=SQLThreads
+
+[ParseStage]
+NextStages=OptimizeStage
+ThreadId=SQLThreads
+
+[PlanCacheStage]
+NextStages=ExecuteStage,ParseStage
+ThreadId=SQLThreads
+
+[QueryCacheStage]
+NextStages=PlanCacheStage
+ThreadId=SQLThreads
+
+[ResolveStage]
+NextStages=QueryCacheStage
+ThreadId=SQLThreads
+
+[SEDA_BASE]
+EventHistory=false
+MaxEventHistoryNum=100
+STAGES=SessionStage,ExecuteStage,OptimizeStage,ParseStage,ResolveStage,PlanCacheStage,QueryCacheStage,DefaultStorageStage,MemStorageStage,TimerStage,MetricsStage
+ThreadPools=SQLThre
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: init.cpp init_seda 63]>>(Re)Starting State: Pid: 2993 Time: Fri Mar 17 21:30:43 2023
+
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: init.cpp init_seda 64]>>The process Name is observer
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: seda_config.cpp init_event_history 209]>>Successfully init_event_history, EventHistory:0, MaxEventHops:100
+[2023-3-17 21:30:43 pid:2993 tid:7ffff66f8700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff66f8700, threadname = SQLThreads
+
+[2023-3-17 21:30:43 pid:2993 tid:7ffff5ef7700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff5ef7700, threadname = SQLThreads
+
+[2023-3-17 21:30:43 pid:2993 tid:7ffff56f6700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff56f6700, threadname = SQLThreads
+
+[2023-3-17 21:30:43 pid:2993 tid:7ffff4ef5700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff4ef5700, threadname = IOThreads
+
+[2023-3-17 21:30:43 pid:2993 tid:7fffe7fff700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe7fff700, threadname = IOThreads
+
+[2023-3-17 21:30:43 pid:2993 tid:7fffe77fe700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe77fe700, threadname = IOThreads
+
+[2023-3-17 21:30:43 pid:2993 tid:7fffe6ffd700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe6ffd700, threadname = DefaultThreads
+
+[2023-3-17 21:30:43 pid:2993 tid:7fffe67fc700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe67fc700, threadname = DefaultThreads
+
+[2023-3-17 21:30:43 pid:2993 tid:7fffe5ffb700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe5ffb700, threadname = DefaultThreads
+
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage SessionStage use threadpool DefaultThreads.
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ExecuteStage use threadpool DefaultThreads.
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage OptimizeStage use threadpool DefaultThreads.
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ParseStage use threadpool DefaultThreads.
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ResolveStage use threadpool DefaultThreads.
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage PlanCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage QueryCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 88]>>Use sys as system db
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: default_handler.cpp init 54]>>Default handler init with ./miniob success
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: db.cpp open_all_tables 132]>>All table have been opened. num=0
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 112]>>Open system db success: sys
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage DefaultStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MemStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for TimerStage, use default threadpool DefaultThreads
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage TimerStage use threadpool DefaultThreads.
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for MetricsStage, use default threadpool DefaultThreads
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MetricsStage use threadpool DefaultThreads.
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :DefaultStorageStage.query
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.sql
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: init.cpp init 225]>>Successfully init utility
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.readsocket
+[2023-3-17 21:30:43 pid:2993 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.writesocket
+[2023-3-17 21:30:47 pid:2993 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 333]>>Listen on port 6789
+[2023-3-17 21:30:47 pid:2993 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 350]>>Observer start success
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: init.cpp init 201]>>Output configuration 
+Begin dump configuration
+[]
+
+[DefaultStorageStage]
+BaseDir=./miniob
+SystemDb=sys
+ThreadId=IOThreads
+
+[DefaultThreads]
+count=3
+
+[ExecuteStage]
+NextStages=DefaultStorageStage,MemStorageStage
+ThreadId=SQLThreads
+
+[IOThreads]
+count=3
+
+[LOG]
+LOG_CONSOLE_LEVEL=1
+LOG_FILE_LEVEL=3
+LOG_FILE_NAME=observer.log
+
+[MemStorageStage]
+ThreadId=IOThreads
+
+[MetricsStage]
+NextStages=TimerStage
+
+[NET]
+CLIENT_ADDRESS=INADDR_ANY
+MAX_CONNECTION_NUM=8192
+PORT=6789
+
+[OptimizeStage]
+NextStages=ExecuteStage
+ThreadId=SQLThreads
+
+[ParseStage]
+NextStages=OptimizeStage
+ThreadId=SQLThreads
+
+[PlanCacheStage]
+NextStages=ExecuteStage,ParseStage
+ThreadId=SQLThreads
+
+[QueryCacheStage]
+NextStages=PlanCacheStage
+ThreadId=SQLThreads
+
+[ResolveStage]
+NextStages=QueryCacheStage
+ThreadId=SQLThreads
+
+[SEDA_BASE]
+EventHistory=false
+MaxEventHistoryNum=100
+STAGES=SessionStage,ExecuteStage,OptimizeStage,ParseStage,ResolveStage,PlanCacheStage,QueryCacheStage,DefaultStorageStage,MemStorageStage,TimerStage,MetricsStage
+ThreadPools=SQLThre
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: init.cpp init_seda 63]>>(Re)Starting State: Pid: 3166 Time: Fri Mar 17 21:30:56 2023
+
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: init.cpp init_seda 64]>>The process Name is observer
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: seda_config.cpp init_event_history 209]>>Successfully init_event_history, EventHistory:0, MaxEventHops:100
+[2023-3-17 21:30:56 pid:3166 tid:7ffff66f8700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff66f8700, threadname = SQLThreads
+
+[2023-3-17 21:30:56 pid:3166 tid:7ffff5ef7700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff5ef7700, threadname = SQLThreads
+
+[2023-3-17 21:30:56 pid:3166 tid:7ffff56f6700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff56f6700, threadname = SQLThreads
+
+[2023-3-17 21:30:56 pid:3166 tid:7ffff4ef5700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff4ef5700, threadname = IOThreads
+
+[2023-3-17 21:30:56 pid:3166 tid:7fffe7fff700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe7fff700, threadname = IOThreads
+
+[2023-3-17 21:30:56 pid:3166 tid:7fffe77fe700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe77fe700, threadname = IOThreads
+
+[2023-3-17 21:30:56 pid:3166 tid:7fffe67fc700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe67fc700, threadname = DefaultThreads
+
+[2023-3-17 21:30:56 pid:3166 tid:7fffe6ffd700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe6ffd700, threadname = DefaultThreads
+
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage SessionStage use threadpool DefaultThreads.
+[2023-3-17 21:30:56 pid:3166 tid:7fffe5ffb700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe5ffb700, threadname = DefaultThreads
+
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ExecuteStage use threadpool DefaultThreads.
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage OptimizeStage use threadpool DefaultThreads.
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ParseStage use threadpool DefaultThreads.
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ResolveStage use threadpool DefaultThreads.
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage PlanCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage QueryCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 88]>>Use sys as system db
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: default_handler.cpp init 54]>>Default handler init with ./miniob success
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  WARNNING: default_handler.cpp create_db 78]>>Db already exists: sys
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: db.cpp open_all_tables 132]>>All table have been opened. num=0
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 112]>>Open system db success: sys
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage DefaultStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MemStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for TimerStage, use default threadpool DefaultThreads
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage TimerStage use threadpool DefaultThreads.
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for MetricsStage, use default threadpool DefaultThreads
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MetricsStage use threadpool DefaultThreads.
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :DefaultStorageStage.query
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.sql
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: init.cpp init 225]>>Successfully init utility
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.readsocket
+[2023-3-17 21:30:56 pid:3166 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.writesocket
+[2023-3-17 21:31:5 pid:3166 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 333]>>Listen on port 6789
+[2023-3-17 21:31:5 pid:3166 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 350]>>Observer start success
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: init.cpp init 201]>>Output configuration 
+Begin dump configuration
+[]
+
+[DefaultStorageStage]
+BaseDir=./miniob
+SystemDb=sys
+ThreadId=IOThreads
+
+[DefaultThreads]
+count=3
+
+[ExecuteStage]
+NextStages=DefaultStorageStage,MemStorageStage
+ThreadId=SQLThreads
+
+[IOThreads]
+count=3
+
+[LOG]
+LOG_CONSOLE_LEVEL=1
+LOG_FILE_LEVEL=3
+LOG_FILE_NAME=observer.log
+
+[MemStorageStage]
+ThreadId=IOThreads
+
+[MetricsStage]
+NextStages=TimerStage
+
+[NET]
+CLIENT_ADDRESS=INADDR_ANY
+MAX_CONNECTION_NUM=8192
+PORT=6789
+
+[OptimizeStage]
+NextStages=ExecuteStage
+ThreadId=SQLThreads
+
+[ParseStage]
+NextStages=OptimizeStage
+ThreadId=SQLThreads
+
+[PlanCacheStage]
+NextStages=ExecuteStage,ParseStage
+ThreadId=SQLThreads
+
+[QueryCacheStage]
+NextStages=PlanCacheStage
+ThreadId=SQLThreads
+
+[ResolveStage]
+NextStages=QueryCacheStage
+ThreadId=SQLThreads
+
+[SEDA_BASE]
+EventHistory=false
+MaxEventHistoryNum=100
+STAGES=SessionStage,ExecuteStage,OptimizeStage,ParseStage,ResolveStage,PlanCacheStage,QueryCacheStage,DefaultStorageStage,MemStorageStage,TimerStage,MetricsStage
+ThreadPools=SQLThre
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: init.cpp init_seda 63]>>(Re)Starting State: Pid: 3309 Time: Fri Mar 17 21:31:26 2023
+
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: init.cpp init_seda 64]>>The process Name is observer
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: seda_config.cpp init_event_history 209]>>Successfully init_event_history, EventHistory:0, MaxEventHops:100
+[2023-3-17 21:31:26 pid:3309 tid:7ffff66f8700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff66f8700, threadname = SQLThreads
+
+[2023-3-17 21:31:26 pid:3309 tid:7ffff5ef7700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff5ef7700, threadname = SQLThreads
+
+[2023-3-17 21:31:26 pid:3309 tid:7ffff56f6700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff56f6700, threadname = SQLThreads
+
+[2023-3-17 21:31:26 pid:3309 tid:7ffff4ef5700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff4ef5700, threadname = IOThreads
+
+[2023-3-17 21:31:26 pid:3309 tid:7fffe7fff700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe7fff700, threadname = IOThreads
+
+[2023-3-17 21:31:26 pid:3309 tid:7fffe77fe700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe77fe700, threadname = IOThreads
+
+[2023-3-17 21:31:26 pid:3309 tid:7fffe6ffd700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe6ffd700, threadname = DefaultThreads
+
+[2023-3-17 21:31:26 pid:3309 tid:7fffe67fc700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe67fc700, threadname = DefaultThreads
+
+[2023-3-17 21:31:26 pid:3309 tid:7fffe5ffb700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe5ffb700, threadname = DefaultThreads
+
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage SessionStage use threadpool DefaultThreads.
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ExecuteStage use threadpool DefaultThreads.
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage OptimizeStage use threadpool DefaultThreads.
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ParseStage use threadpool DefaultThreads.
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ResolveStage use threadpool DefaultThreads.
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage PlanCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage QueryCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 88]>>Use sys as system db
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: default_handler.cpp init 54]>>Default handler init with ./miniob success
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  WARNNING: default_handler.cpp create_db 78]>>Db already exists: sys
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: db.cpp open_all_tables 132]>>All table have been opened. num=0
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 112]>>Open system db success: sys
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage DefaultStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MemStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for TimerStage, use default threadpool DefaultThreads
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage TimerStage use threadpool DefaultThreads.
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for MetricsStage, use default threadpool DefaultThreads
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MetricsStage use threadpool DefaultThreads.
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :DefaultStorageStage.query
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.sql
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: init.cpp init 225]>>Successfully init utility
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.readsocket
+[2023-3-17 21:31:26 pid:3309 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.writesocket
+[2023-3-17 21:31:30 pid:3309 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 333]>>Listen on port 6789
+[2023-3-17 21:31:30 pid:3309 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 350]>>Observer start success
+[2023-3-17 21:31:41 pid:3309 tid:7ffff7fe9c00  INFO: server.cpp accept 278]>>Accepted connection from 127.0.0.1:56470
+
+[2023-3-17 21:31:46 pid:3309 tid:7ffff7fe9c00  INFO: server.cpp recv 175]>>receive command(size=14): show tables;
+
+[2023-3-17 21:32:26 pid:3309 tid:7fffe67fc700  INFO: log_reporter.cpp report 36]>>DefaultStorageStage.query:mean:0,tps:0.0166667
+[2023-3-17 21:32:26 pid:3309 tid:7fffe67fc700  INFO: log_reporter.cpp report 36]>>SessionStage.readsocket:mean:0,tps:0.0169492
+[2023-3-17 21:32:26 pid:3309 tid:7fffe67fc700  INFO: log_reporter.cpp report 36]>>SessionStage.sql:mean:17851,tps:0.0166667
+[2023-3-17 21:32:26 pid:3309 tid:7fffe67fc700  INFO: log_reporter.cpp report 36]>>SessionStage.writesocket:mean:0,tps:0.0338983
+[2023-3-17 21:32:39 pid:3309 tid:7ffff7fe9c00  INFO: server.cpp recv 175]>>receive command(size=45): create table t1(c1 int, c2 float, c3 date);
+
+[2023-3-17 21:32:56 pid:3309 tid:7fffe6ffd700  INFO: table.cpp create 64]>>Begin to create table ./miniob/db/sys:t1
+[2023-3-17 21:33:4 pid:3309 tid:7fffe6ffd700  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-3-17 21:33:4 pid:3309 tid:7fffe6ffd700  INFO: field_meta.cpp init 70]>>Init a field with name=c1
+[2023-3-17 21:33:4 pid:3309 tid:7fffe6ffd700  INFO: field_meta.cpp init 70]>>Init a field with name=c2
+[2023-3-17 21:33:4 pid:3309 tid:7fffe6ffd700  INFO: field_meta.cpp init 70]>>Init a field with name=c3
+[2023-3-17 21:33:4 pid:3309 tid:7fffe6ffd700  INFO: table_meta.cpp init 97]>>Sussessfully initialized table meta. table name=t1
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:256, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:512, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:768, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:1024, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:1280, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:1536, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:1792, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:2048, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:2304, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:2560, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:2816, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:3072, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:3328, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:3584, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:3840, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:4096, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:4352, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:4608, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:4864, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:5120, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:5376, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:5632, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:5888, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:6144, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:6400, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:6656, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:6912, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:7168, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:7424, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:7680, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:7936, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:8192, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:8448, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:8704, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:8960, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:9216, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:9472, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:9728, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:9984, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:10240, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:10496, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:10752, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:11008, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:11264, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:11520, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:11776, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:12032, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:12288, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:12544, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:12800, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:13056, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:13312, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:13568, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:13824, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:14080, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:14336, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:14592, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:14848, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:15104, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:15360, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:15616, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:15872, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:16128, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:16384, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:16640, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:16896, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:17152, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:17408, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:17664, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:17920, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:18176, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:18432, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:18688, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:18944, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:19200, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:19456, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:19712, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:19968, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:20224, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:20480, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:20736, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:20992, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:21248, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:21504, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:21760, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:22016, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:22272, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:22528, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:22784, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:23040, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:23296, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:23552, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:23808, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:24064, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:24320, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:24576, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:24832, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:25088, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:25344, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:25600, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:25856, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:26112, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:26368, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:26624, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:26880, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:27136, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:27392, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:27648, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:27904, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:28160, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:28416, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:28672, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:28928, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:29184, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:29440, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:29696, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:29952, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:30208, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:30464, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:30720, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:30976, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:31232, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:31488, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:31744, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:32000, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:32256, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:32512, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:32768, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:33024, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:33280, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:33536, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:33792, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:34048, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:34304, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:34560, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:34816, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:35072, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:35328, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:35584, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:35840, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:36096, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:36352, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:36608, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:36864, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:37120, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:37376, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:37632, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:37888, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:38144, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:38400, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:38656, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:38912, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:39168, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:39424, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:39680, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:39936, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:40192, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:40448, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:40704, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:40960, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:41216, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:41472, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:41728, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:41984, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:42240, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:42496, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:42752, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:43008, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:43264, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:43520, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:43776, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:44032, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:44288, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:44544, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:44800, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:45056, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:45312, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:45568, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:45824, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:46080, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:46336, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:46592, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:46848, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:47104, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:47360, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:47616, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:47872, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:48128, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:48384, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:48640, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:48896, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:49152, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:49408, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:49664, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:49920, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:50176, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:50432, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:50688, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:50944, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:51200, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:51456, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:51712, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:51968, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:52224, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:52480, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:52736, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:52992, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:53248, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:53504, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:53760, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:54016, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:54272, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:54528, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:54784, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:55040, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:55296, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:55552, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:55808, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:56064, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:56320, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:56576, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:56832, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:57088, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:57344, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:57600, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:57856, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:58112, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:58368, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:58624, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:58880, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:59136, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:59392, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:59648, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:59904, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:60160, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:60416, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:60672, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:60928, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:61184, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:61440, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:61696, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:61952, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:62208, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:62464, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:62720, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:62976, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:63232, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:63488, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:63744, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:64000, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:64256, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:64512, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:64768, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:65024, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:65280, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:65536, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: mem_pool.h init 244]>>Extend one pool, this->size:65536, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:33:14 pid:3309 tid:7fffe6ffd700  INFO: disk_buffer_pool.cpp create_file 173]>>Successfully create ./miniob/db/sys/t1.data.
+[2023-3-17 21:33:19 pid:3309 tid:7fffe6ffd700  INFO: disk_buffer_pool.cpp open_file 204]>>Successfully open file ./miniob/db/sys/t1.data.
+[2023-3-17 21:33:19 pid:3309 tid:7fffe6ffd700  INFO: disk_buffer_pool.cpp open_file 242]>>Successfully open ./miniob/db/sys/t1.data. file_id=0, hdr_frame=0x7ffff44f3010
+[2023-3-17 21:33:19 pid:3309 tid:7fffe6ffd700  INFO: record_manager.cpp init 298]>>Successfully open 0.
+[2023-3-17 21:33:21 pid:3309 tid:7fffe6ffd700  INFO: table.cpp create 120]>>Successfully create table ./miniob/db/sys:t1
+[2023-3-17 21:33:27 pid:3309 tid:7fffe5ffb700  INFO: log_reporter.cpp report 36]>>DefaultStorageStage.query:mean:0,tps:0
+[2023-3-17 21:33:27 pid:3309 tid:7fffe5ffb700  INFO: log_reporter.cpp report 36]>>SessionStage.readsocket:mean:0,tps:0.0166667
+[2023-3-17 21:33:27 pid:3309 tid:7fffe5ffb700  INFO: log_reporter.cpp report 36]>>SessionStage.sql:mean:0,tps:0
+[2023-3-17 21:33:27 pid:3309 tid:7fffe5ffb700  INFO: log_reporter.cpp report 36]>>SessionStage.writesocket:mean:0,tps:0
+[2023-3-17 21:33:28 pid:3309 tid:7fffe6ffd700  INFO: db.cpp create_table 75]>>Create table success. table name=t1
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: init.cpp init 201]>>Output configuration 
+Begin dump configuration
+[]
+
+[DefaultStorageStage]
+BaseDir=./miniob
+SystemDb=sys
+ThreadId=IOThreads
+
+[DefaultThreads]
+count=3
+
+[ExecuteStage]
+NextStages=DefaultStorageStage,MemStorageStage
+ThreadId=SQLThreads
+
+[IOThreads]
+count=3
+
+[LOG]
+LOG_CONSOLE_LEVEL=1
+LOG_FILE_LEVEL=3
+LOG_FILE_NAME=observer.log
+
+[MemStorageStage]
+ThreadId=IOThreads
+
+[MetricsStage]
+NextStages=TimerStage
+
+[NET]
+CLIENT_ADDRESS=INADDR_ANY
+MAX_CONNECTION_NUM=8192
+PORT=6789
+
+[OptimizeStage]
+NextStages=ExecuteStage
+ThreadId=SQLThreads
+
+[ParseStage]
+NextStages=OptimizeStage
+ThreadId=SQLThreads
+
+[PlanCacheStage]
+NextStages=ExecuteStage,ParseStage
+ThreadId=SQLThreads
+
+[QueryCacheStage]
+NextStages=PlanCacheStage
+ThreadId=SQLThreads
+
+[ResolveStage]
+NextStages=QueryCacheStage
+ThreadId=SQLThreads
+
+[SEDA_BASE]
+EventHistory=false
+MaxEventHistoryNum=100
+STAGES=SessionStage,ExecuteStage,OptimizeStage,ParseStage,ResolveStage,PlanCacheStage,QueryCacheStage,DefaultStorageStage,MemStorageStage,TimerStage,MetricsStage
+ThreadPools=SQLThre
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: init.cpp init_seda 63]>>(Re)Starting State: Pid: 3703 Time: Fri Mar 17 21:33:58 2023
+
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: init.cpp init_seda 64]>>The process Name is observer
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: seda_config.cpp init_event_history 209]>>Successfully init_event_history, EventHistory:0, MaxEventHops:100
+[2023-3-17 21:33:58 pid:3703 tid:7ffff66f8700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff66f8700, threadname = SQLThreads
+
+[2023-3-17 21:33:58 pid:3703 tid:7ffff5ef7700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff5ef7700, threadname = SQLThreads
+
+[2023-3-17 21:33:58 pid:3703 tid:7ffff56f6700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff56f6700, threadname = SQLThreads
+
+[2023-3-17 21:33:58 pid:3703 tid:7ffff4ef5700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff4ef5700, threadname = IOThreads
+
+[2023-3-17 21:33:58 pid:3703 tid:7fffe7fff700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe7fff700, threadname = IOThreads
+
+[2023-3-17 21:33:58 pid:3703 tid:7fffe77fe700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe77fe700, threadname = IOThreads
+
+[2023-3-17 21:33:58 pid:3703 tid:7fffe6ffd700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe6ffd700, threadname = DefaultThreads
+
+[2023-3-17 21:33:58 pid:3703 tid:7fffe67fc700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe67fc700, threadname = DefaultThreads
+
+[2023-3-17 21:33:58 pid:3703 tid:7fffe5ffb700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe5ffb700, threadname = DefaultThreads
+
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage SessionStage use threadpool DefaultThreads.
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ExecuteStage use threadpool DefaultThreads.
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage OptimizeStage use threadpool DefaultThreads.
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ParseStage use threadpool DefaultThreads.
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ResolveStage use threadpool DefaultThreads.
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage PlanCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage QueryCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 88]>>Use sys as system db
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: default_handler.cpp init 54]>>Default handler init with ./miniob success
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  WARNNING: default_handler.cpp create_db 78]>>Db already exists: sys
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=c1
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=c2
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  ERROR: field_meta.cpp from_json 151]>>Got invalid field type. type=0
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  ERROR: table_meta.cpp deserialize 261]>>Failed to deserialize table meta. table name =t1
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  ERROR: table.cpp open 151]>>Failed to deserialize table meta. file name=./miniob/db/sys/t1.table
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: table.cpp ~Table 53]>>Table has been closed: 
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  ERROR: db.cpp open_all_tables 116]>>Failed to open table. filename=t1.table
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  ERROR: default_handler.cpp open_db 114]>>Failed to open db: sys. error=1
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 112]>>Open system db success: sys
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage DefaultStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MemStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for TimerStage, use default threadpool DefaultThreads
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage TimerStage use threadpool DefaultThreads.
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for MetricsStage, use default threadpool DefaultThreads
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MetricsStage use threadpool DefaultThreads.
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :DefaultStorageStage.query
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.sql
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: init.cpp init 225]>>Successfully init utility
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.readsocket
+[2023-3-17 21:33:58 pid:3703 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.writesocket
+[2023-3-17 21:34:3 pid:3703 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 333]>>Listen on port 6789
+[2023-3-17 21:34:3 pid:3703 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 350]>>Observer start success
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: init.cpp init 201]>>Output configuration 
+Begin dump configuration
+[]
+
+[DefaultStorageStage]
+BaseDir=./miniob
+SystemDb=sys
+ThreadId=IOThreads
+
+[DefaultThreads]
+count=3
+
+[ExecuteStage]
+NextStages=DefaultStorageStage,MemStorageStage
+ThreadId=SQLThreads
+
+[IOThreads]
+count=3
+
+[LOG]
+LOG_CONSOLE_LEVEL=1
+LOG_FILE_LEVEL=3
+LOG_FILE_NAME=observer.log
+
+[MemStorageStage]
+ThreadId=IOThreads
+
+[MetricsStage]
+NextStages=TimerStage
+
+[NET]
+CLIENT_ADDRESS=INADDR_ANY
+MAX_CONNECTION_NUM=8192
+PORT=6789
+
+[OptimizeStage]
+NextStages=ExecuteStage
+ThreadId=SQLThreads
+
+[ParseStage]
+NextStages=OptimizeStage
+ThreadId=SQLThreads
+
+[PlanCacheStage]
+NextStages=ExecuteStage,ParseStage
+ThreadId=SQLThreads
+
+[QueryCacheStage]
+NextStages=PlanCacheStage
+ThreadId=SQLThreads
+
+[ResolveStage]
+NextStages=QueryCacheStage
+ThreadId=SQLThreads
+
+[SEDA_BASE]
+EventHistory=false
+MaxEventHistoryNum=100
+STAGES=SessionStage,ExecuteStage,OptimizeStage,ParseStage,ResolveStage,PlanCacheStage,QueryCacheStage,DefaultStorageStage,MemStorageStage,TimerStage,MetricsStage
+ThreadPools=SQLThre
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: init.cpp init_seda 63]>>(Re)Starting State: Pid: 4028 Time: Fri Mar 17 21:35:02 2023
+
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: init.cpp init_seda 64]>>The process Name is observer
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: seda_config.cpp init_event_history 209]>>Successfully init_event_history, EventHistory:0, MaxEventHops:100
+[2023-3-17 21:35:2 pid:4028 tid:7ffff66f8700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff66f8700, threadname = SQLThreads
+
+[2023-3-17 21:35:2 pid:4028 tid:7fffeffff700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffeffff700, threadname = SQLThreads
+
+[2023-3-17 21:35:2 pid:4028 tid:7ffff5ef7700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff5ef7700, threadname = SQLThreads
+
+[2023-3-17 21:35:2 pid:4028 tid:7ffff56f6700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff56f6700, threadname = IOThreads
+
+[2023-3-17 21:35:2 pid:4028 tid:7ffff4ef5700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff4ef5700, threadname = IOThreads
+
+[2023-3-17 21:35:2 pid:4028 tid:7fffef7fe700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffef7fe700, threadname = IOThreads
+
+[2023-3-17 21:35:2 pid:4028 tid:7fffee7fc700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffee7fc700, threadname = DefaultThreads
+
+[2023-3-17 21:35:2 pid:4028 tid:7fffedffb700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffedffb700, threadname = DefaultThreads
+
+[2023-3-17 21:35:2 pid:4028 tid:7fffeeffd700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffeeffd700, threadname = DefaultThreads
+
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage SessionStage use threadpool DefaultThreads.
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ExecuteStage use threadpool DefaultThreads.
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage OptimizeStage use threadpool DefaultThreads.
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ParseStage use threadpool DefaultThreads.
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ResolveStage use threadpool DefaultThreads.
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage PlanCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage QueryCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 88]>>Use sys as system db
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: default_handler.cpp init 54]>>Default handler init with ./miniob success
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  WARNNING: default_handler.cpp create_db 78]>>Db already exists: sys
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=c1
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=c2
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  ERROR: field_meta.cpp from_json 151]>>Got invalid field type. type=0
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  ERROR: table_meta.cpp deserialize 261]>>Failed to deserialize table meta. table name =t1
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  ERROR: table.cpp open 151]>>Failed to deserialize table meta. file name=./miniob/db/sys/t1.table
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: table.cpp ~Table 53]>>Table has been closed: 
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  ERROR: db.cpp open_all_tables 116]>>Failed to open table. filename=t1.table
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  ERROR: default_handler.cpp open_db 114]>>Failed to open db: sys. error=1
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 112]>>Open system db success: sys
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage DefaultStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MemStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for TimerStage, use default threadpool DefaultThreads
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage TimerStage use threadpool DefaultThreads.
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for MetricsStage, use default threadpool DefaultThreads
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MetricsStage use threadpool DefaultThreads.
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :DefaultStorageStage.query
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.sql
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: init.cpp init 225]>>Successfully init utility
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.readsocket
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.writesocket
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 333]>>Listen on port 6789
+[2023-3-17 21:35:2 pid:4028 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 350]>>Observer start success
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: init.cpp init 201]>>Output configuration 
+Begin dump configuration
+[]
+
+[DefaultStorageStage]
+BaseDir=./miniob
+SystemDb=sys
+ThreadId=IOThreads
+
+[DefaultThreads]
+count=3
+
+[ExecuteStage]
+NextStages=DefaultStorageStage,MemStorageStage
+ThreadId=SQLThreads
+
+[IOThreads]
+count=3
+
+[LOG]
+LOG_CONSOLE_LEVEL=1
+LOG_FILE_LEVEL=3
+LOG_FILE_NAME=observer.log
+
+[MemStorageStage]
+ThreadId=IOThreads
+
+[MetricsStage]
+NextStages=TimerStage
+
+[NET]
+CLIENT_ADDRESS=INADDR_ANY
+MAX_CONNECTION_NUM=8192
+PORT=6789
+
+[OptimizeStage]
+NextStages=ExecuteStage
+ThreadId=SQLThreads
+
+[ParseStage]
+NextStages=OptimizeStage
+ThreadId=SQLThreads
+
+[PlanCacheStage]
+NextStages=ExecuteStage,ParseStage
+ThreadId=SQLThreads
+
+[QueryCacheStage]
+NextStages=PlanCacheStage
+ThreadId=SQLThreads
+
+[ResolveStage]
+NextStages=QueryCacheStage
+ThreadId=SQLThreads
+
+[SEDA_BASE]
+EventHistory=false
+MaxEventHistoryNum=100
+STAGES=SessionStage,ExecuteStage,OptimizeStage,ParseStage,ResolveStage,PlanCacheStage,QueryCacheStage,DefaultStorageStage,MemStorageStage,TimerStage,MetricsStage
+ThreadPools=SQLThre
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: init.cpp init_seda 63]>>(Re)Starting State: Pid: 4213 Time: Fri Mar 17 21:35:37 2023
+
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: init.cpp init_seda 64]>>The process Name is observer
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: seda_config.cpp init_event_history 209]>>Successfully init_event_history, EventHistory:0, MaxEventHops:100
+[2023-3-17 21:35:37 pid:4213 tid:7ffff66f8700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff66f8700, threadname = SQLThreads
+
+[2023-3-17 21:35:37 pid:4213 tid:7ffff5ef7700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff5ef7700, threadname = SQLThreads
+
+[2023-3-17 21:35:37 pid:4213 tid:7ffff56f6700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff56f6700, threadname = SQLThreads
+
+[2023-3-17 21:35:37 pid:4213 tid:7ffff4ef5700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff4ef5700, threadname = IOThreads
+
+[2023-3-17 21:35:37 pid:4213 tid:7fffe7fff700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe7fff700, threadname = IOThreads
+
+[2023-3-17 21:35:37 pid:4213 tid:7fffe77fe700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe77fe700, threadname = IOThreads
+
+[2023-3-17 21:35:37 pid:4213 tid:7fffe6ffd700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe6ffd700, threadname = DefaultThreads
+
+[2023-3-17 21:35:37 pid:4213 tid:7fffe67fc700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe67fc700, threadname = DefaultThreads
+
+[2023-3-17 21:35:37 pid:4213 tid:7fffe5ffb700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe5ffb700, threadname = DefaultThreads
+
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage SessionStage use threadpool DefaultThreads.
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ExecuteStage use threadpool DefaultThreads.
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage OptimizeStage use threadpool DefaultThreads.
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ParseStage use threadpool DefaultThreads.
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ResolveStage use threadpool DefaultThreads.
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage PlanCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage QueryCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 88]>>Use sys as system db
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: default_handler.cpp init 54]>>Default handler init with ./miniob success
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  WARNNING: default_handler.cpp create_db 78]>>Db already exists: sys
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=c1
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=c2
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  ERROR: field_meta.cpp from_json 151]>>Got invalid field type. type=0
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  ERROR: table_meta.cpp deserialize 261]>>Failed to deserialize table meta. table name =t1
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  ERROR: table.cpp open 151]>>Failed to deserialize table meta. file name=./miniob/db/sys/t1.table
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: table.cpp ~Table 53]>>Table has been closed: 
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  ERROR: db.cpp open_all_tables 116]>>Failed to open table. filename=t1.table
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  ERROR: default_handler.cpp open_db 114]>>Failed to open db: sys. error=1
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 112]>>Open system db success: sys
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage DefaultStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MemStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for TimerStage, use default threadpool DefaultThreads
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage TimerStage use threadpool DefaultThreads.
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for MetricsStage, use default threadpool DefaultThreads
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MetricsStage use threadpool DefaultThreads.
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :DefaultStorageStage.query
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.sql
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: init.cpp init 225]>>Successfully init utility
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.readsocket
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.writesocket
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 333]>>Listen on port 6789
+[2023-3-17 21:35:37 pid:4213 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 350]>>Observer start success
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: init.cpp init 201]>>Output configuration 
+Begin dump configuration
+[]
+
+[DefaultStorageStage]
+BaseDir=./miniob
+SystemDb=sys
+ThreadId=IOThreads
+
+[DefaultThreads]
+count=3
+
+[ExecuteStage]
+NextStages=DefaultStorageStage,MemStorageStage
+ThreadId=SQLThreads
+
+[IOThreads]
+count=3
+
+[LOG]
+LOG_CONSOLE_LEVEL=1
+LOG_FILE_LEVEL=3
+LOG_FILE_NAME=observer.log
+
+[MemStorageStage]
+ThreadId=IOThreads
+
+[MetricsStage]
+NextStages=TimerStage
+
+[NET]
+CLIENT_ADDRESS=INADDR_ANY
+MAX_CONNECTION_NUM=8192
+PORT=6789
+
+[OptimizeStage]
+NextStages=ExecuteStage
+ThreadId=SQLThreads
+
+[ParseStage]
+NextStages=OptimizeStage
+ThreadId=SQLThreads
+
+[PlanCacheStage]
+NextStages=ExecuteStage,ParseStage
+ThreadId=SQLThreads
+
+[QueryCacheStage]
+NextStages=PlanCacheStage
+ThreadId=SQLThreads
+
+[ResolveStage]
+NextStages=QueryCacheStage
+ThreadId=SQLThreads
+
+[SEDA_BASE]
+EventHistory=false
+MaxEventHistoryNum=100
+STAGES=SessionStage,ExecuteStage,OptimizeStage,ParseStage,ResolveStage,PlanCacheStage,QueryCacheStage,DefaultStorageStage,MemStorageStage,TimerStage,MetricsStage
+ThreadPools=SQLThre
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: init.cpp init_seda 63]>>(Re)Starting State: Pid: 4488 Time: Fri Mar 17 21:36:51 2023
+
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: init.cpp init_seda 64]>>The process Name is observer
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: seda_config.cpp init_event_history 209]>>Successfully init_event_history, EventHistory:0, MaxEventHops:100
+[2023-3-17 21:36:51 pid:4488 tid:7ffff66f8700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff66f8700, threadname = SQLThreads
+
+[2023-3-17 21:36:51 pid:4488 tid:7fffeffff700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffeffff700, threadname = SQLThreads
+
+[2023-3-17 21:36:51 pid:4488 tid:7ffff5ef7700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff5ef7700, threadname = SQLThreads
+
+[2023-3-17 21:36:51 pid:4488 tid:7ffff56f6700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff56f6700, threadname = IOThreads
+
+[2023-3-17 21:36:51 pid:4488 tid:7ffff4ef5700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff4ef5700, threadname = IOThreads
+
+[2023-3-17 21:36:51 pid:4488 tid:7fffef7fe700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffef7fe700, threadname = IOThreads
+
+[2023-3-17 21:36:51 pid:4488 tid:7fffeeffd700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffeeffd700, threadname = DefaultThreads
+
+[2023-3-17 21:36:51 pid:4488 tid:7fffee7fc700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffee7fc700, threadname = DefaultThreads
+
+[2023-3-17 21:36:51 pid:4488 tid:7fffedffb700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffedffb700, threadname = DefaultThreads
+
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage SessionStage use threadpool DefaultThreads.
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ExecuteStage use threadpool DefaultThreads.
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage OptimizeStage use threadpool DefaultThreads.
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ParseStage use threadpool DefaultThreads.
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ResolveStage use threadpool DefaultThreads.
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage PlanCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage QueryCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 88]>>Use sys as system db
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: default_handler.cpp init 54]>>Default handler init with ./miniob success
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  WARNNING: default_handler.cpp create_db 78]>>Db already exists: sys
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=c1
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=c2
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  ERROR: field_meta.cpp from_json 151]>>Got invalid field type. type=0
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  ERROR: table_meta.cpp deserialize 261]>>Failed to deserialize table meta. table name =t1
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  ERROR: table.cpp open 151]>>Failed to deserialize table meta. file name=./miniob/db/sys/t1.table
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: table.cpp ~Table 53]>>Table has been closed: 
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  ERROR: db.cpp open_all_tables 116]>>Failed to open table. filename=t1.table
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  ERROR: default_handler.cpp open_db 114]>>Failed to open db: sys. error=1
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 112]>>Open system db success: sys
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage DefaultStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MemStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for TimerStage, use default threadpool DefaultThreads
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage TimerStage use threadpool DefaultThreads.
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for MetricsStage, use default threadpool DefaultThreads
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MetricsStage use threadpool DefaultThreads.
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :DefaultStorageStage.query
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.sql
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: init.cpp init 225]>>Successfully init utility
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.readsocket
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.writesocket
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 333]>>Listen on port 6789
+[2023-3-17 21:36:51 pid:4488 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 350]>>Observer start success
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: init.cpp init 201]>>Output configuration 
+Begin dump configuration
+[]
+
+[DefaultStorageStage]
+BaseDir=./miniob
+SystemDb=sys
+ThreadId=IOThreads
+
+[DefaultThreads]
+count=3
+
+[ExecuteStage]
+NextStages=DefaultStorageStage,MemStorageStage
+ThreadId=SQLThreads
+
+[IOThreads]
+count=3
+
+[LOG]
+LOG_CONSOLE_LEVEL=1
+LOG_FILE_LEVEL=3
+LOG_FILE_NAME=observer.log
+
+[MemStorageStage]
+ThreadId=IOThreads
+
+[MetricsStage]
+NextStages=TimerStage
+
+[NET]
+CLIENT_ADDRESS=INADDR_ANY
+MAX_CONNECTION_NUM=8192
+PORT=6789
+
+[OptimizeStage]
+NextStages=ExecuteStage
+ThreadId=SQLThreads
+
+[ParseStage]
+NextStages=OptimizeStage
+ThreadId=SQLThreads
+
+[PlanCacheStage]
+NextStages=ExecuteStage,ParseStage
+ThreadId=SQLThreads
+
+[QueryCacheStage]
+NextStages=PlanCacheStage
+ThreadId=SQLThreads
+
+[ResolveStage]
+NextStages=QueryCacheStage
+ThreadId=SQLThreads
+
+[SEDA_BASE]
+EventHistory=false
+MaxEventHistoryNum=100
+STAGES=SessionStage,ExecuteStage,OptimizeStage,ParseStage,ResolveStage,PlanCacheStage,QueryCacheStage,DefaultStorageStage,MemStorageStage,TimerStage,MetricsStage
+ThreadPools=SQLThre
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: init.cpp init_seda 63]>>(Re)Starting State: Pid: 5090 Time: Fri Mar 17 21:37:32 2023
+
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: init.cpp init_seda 64]>>The process Name is observer
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: seda_config.cpp init_event_history 209]>>Successfully init_event_history, EventHistory:0, MaxEventHops:100
+[2023-3-17 21:37:32 pid:5090 tid:7ffff66f8700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff66f8700, threadname = SQLThreads
+
+[2023-3-17 21:37:32 pid:5090 tid:7fffedef7700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffedef7700, threadname = SQLThreads
+
+[2023-3-17 21:37:32 pid:5090 tid:7ffff5ef7700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff5ef7700, threadname = SQLThreads
+
+[2023-3-17 21:37:32 pid:5090 tid:7ffff56f6700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff56f6700, threadname = IOThreads
+
+[2023-3-17 21:37:32 pid:5090 tid:7ffff4ef5700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff4ef5700, threadname = IOThreads
+
+[2023-3-17 21:37:32 pid:5090 tid:7fffeffff700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffeffff700, threadname = IOThreads
+
+[2023-3-17 21:37:32 pid:5090 tid:7fffef7fe700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffef7fe700, threadname = DefaultThreads
+
+[2023-3-17 21:37:32 pid:5090 tid:7fffeeffd700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffeeffd700, threadname = DefaultThreads
+
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage SessionStage use threadpool DefaultThreads.
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ExecuteStage use threadpool DefaultThreads.
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage OptimizeStage use threadpool DefaultThreads.
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ParseStage use threadpool DefaultThreads.
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ResolveStage use threadpool DefaultThreads.
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage PlanCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage QueryCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 88]>>Use sys as system db
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: default_handler.cpp init 54]>>Default handler init with ./miniob success
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  WARNNING: default_handler.cpp create_db 78]>>Db already exists: sys
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=c1
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: field_meta.cpp init 70]>>Init a field with name=c2
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  ERROR: field_meta.cpp from_json 151]>>Got invalid field type. type=0
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  ERROR: table_meta.cpp deserialize 261]>>Failed to deserialize table meta. table name =t1
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  ERROR: table.cpp open 151]>>Failed to deserialize table meta. file name=./miniob/db/sys/t1.table
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: table.cpp ~Table 53]>>Table has been closed: 
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  ERROR: db.cpp open_all_tables 116]>>Failed to open table. filename=t1.table
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  ERROR: default_handler.cpp open_db 114]>>Failed to open db: sys. error=1
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 112]>>Open system db success: sys
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage DefaultStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MemStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for TimerStage, use default threadpool DefaultThreads
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage TimerStage use threadpool DefaultThreads.
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for MetricsStage, use default threadpool DefaultThreads
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MetricsStage use threadpool DefaultThreads.
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :DefaultStorageStage.query
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.sql
+[2023-3-17 21:37:32 pid:5090 tid:7fffee7fc700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffee7fc700, threadname = DefaultThreads
+
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: init.cpp init 225]>>Successfully init utility
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.readsocket
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.writesocket
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 333]>>Listen on port 6789
+[2023-3-17 21:37:32 pid:5090 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 350]>>Observer start success
+[2023-3-17 21:37:49 pid:5090 tid:7ffff7fe9c00  INFO: server.cpp accept 278]>>Accepted connection from 127.0.0.1:6807
+
+[2023-3-17 21:38:0 pid:5090 tid:7ffff7fe9c00  INFO: server.cpp recv 175]>>receive command(size=36): create table t1(c1 int, c2 float);
+
+[2023-3-17 21:38:20 pid:5090 tid:7fffef7fe700  INFO: table.cpp create 64]>>Begin to create table ./miniob/db/sys:t1
+[2023-3-17 21:38:23 pid:5090 tid:7fffef7fe700  ERROR: table.cpp create 78]>>Failed to create table file, it has been created. ./miniob/db/sys/t1.table, EEXIST, File exists
+[2023-3-17 21:38:23 pid:5090 tid:7fffef7fe700  ERROR: db.cpp create_table 69]>>Failed to create table t1.
+[2023-3-17 21:38:23 pid:5090 tid:7fffef7fe700  INFO: table.cpp ~Table 53]>>Table has been closed: 
+[2023-3-17 21:38:32 pid:5090 tid:7fffeeffd700  INFO: log_reporter.cpp report 36]>>DefaultStorageStage.query:mean:7486,tps:0.0166667
+[2023-3-17 21:38:32 pid:5090 tid:7fffeeffd700  INFO: log_reporter.cpp report 36]>>SessionStage.readsocket:mean:0,tps:0.0166667
+[2023-3-17 21:38:32 pid:5090 tid:7fffeeffd700  INFO: log_reporter.cpp report 36]>>SessionStage.sql:mean:23729,tps:0.0166667
+[2023-3-17 21:38:32 pid:5090 tid:7fffeeffd700  INFO: log_reporter.cpp report 36]>>SessionStage.writesocket:mean:0,tps:0.0333333
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: init.cpp init 201]>>Output configuration 
+Begin dump configuration
+[]
+
+[DefaultStorageStage]
+BaseDir=./miniob
+SystemDb=sys
+ThreadId=IOThreads
+
+[DefaultThreads]
+count=3
+
+[ExecuteStage]
+NextStages=DefaultStorageStage,MemStorageStage
+ThreadId=SQLThreads
+
+[IOThreads]
+count=3
+
+[LOG]
+LOG_CONSOLE_LEVEL=1
+LOG_FILE_LEVEL=3
+LOG_FILE_NAME=observer.log
+
+[MemStorageStage]
+ThreadId=IOThreads
+
+[MetricsStage]
+NextStages=TimerStage
+
+[NET]
+CLIENT_ADDRESS=INADDR_ANY
+MAX_CONNECTION_NUM=8192
+PORT=6789
+
+[OptimizeStage]
+NextStages=ExecuteStage
+ThreadId=SQLThreads
+
+[ParseStage]
+NextStages=OptimizeStage
+ThreadId=SQLThreads
+
+[PlanCacheStage]
+NextStages=ExecuteStage,ParseStage
+ThreadId=SQLThreads
+
+[QueryCacheStage]
+NextStages=PlanCacheStage
+ThreadId=SQLThreads
+
+[ResolveStage]
+NextStages=QueryCacheStage
+ThreadId=SQLThreads
+
+[SEDA_BASE]
+EventHistory=false
+MaxEventHistoryNum=100
+STAGES=SessionStage,ExecuteStage,OptimizeStage,ParseStage,ResolveStage,PlanCacheStage,QueryCacheStage,DefaultStorageStage,MemStorageStage,TimerStage,MetricsStage
+ThreadPools=SQLThre
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: init.cpp init_seda 63]>>(Re)Starting State: Pid: 5377 Time: Fri Mar 17 21:38:48 2023
+
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: init.cpp init_seda 64]>>The process Name is observer
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: seda_config.cpp init_event_history 209]>>Successfully init_event_history, EventHistory:0, MaxEventHops:100
+[2023-3-17 21:38:48 pid:5377 tid:7ffff66f8700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff66f8700, threadname = SQLThreads
+
+[2023-3-17 21:38:48 pid:5377 tid:7ffff5ef7700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff5ef7700, threadname = SQLThreads
+
+[2023-3-17 21:38:48 pid:5377 tid:7ffff56f6700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff56f6700, threadname = SQLThreads
+
+[2023-3-17 21:38:48 pid:5377 tid:7ffff4ef5700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7ffff4ef5700, threadname = IOThreads
+
+[2023-3-17 21:38:48 pid:5377 tid:7fffe7fff700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe7fff700, threadname = IOThreads
+
+[2023-3-17 21:38:48 pid:5377 tid:7fffe77fe700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe77fe700, threadname = IOThreads
+
+[2023-3-17 21:38:48 pid:5377 tid:7fffe6ffd700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe6ffd700, threadname = DefaultThreads
+
+[2023-3-17 21:38:48 pid:5377 tid:7fffe5ffb700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe5ffb700, threadname = DefaultThreads
+
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage SessionStage use threadpool DefaultThreads.
+[2023-3-17 21:38:48 pid:5377 tid:7fffe67fc700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7fffe67fc700, threadname = DefaultThreads
+
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ExecuteStage use threadpool DefaultThreads.
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage OptimizeStage use threadpool DefaultThreads.
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ParseStage use threadpool DefaultThreads.
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage ResolveStage use threadpool DefaultThreads.
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage PlanCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage QueryCacheStage use threadpool DefaultThreads.
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 88]>>Use sys as system db
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: default_handler.cpp init 54]>>Default handler init with ./miniob success
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  WARNNING: default_handler.cpp create_db 78]>>Db already exists: sys
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: db.cpp open_all_tables 132]>>All table have been opened. num=0
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: default_storage_stage.cpp set_properties 112]>>Open system db success: sys
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage DefaultStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MemStorageStage use threadpool DefaultThreads.
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for TimerStage, use default threadpool DefaultThreads
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage TimerStage use threadpool DefaultThreads.
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for MetricsStage, use default threadpool DefaultThreads
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: seda_config.cpp init_stages 354]>>Stage MetricsStage use threadpool DefaultThreads.
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :DefaultStorageStage.query
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.sql
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: init.cpp init 225]>>Successfully init utility
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.readsocket
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.writesocket
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 333]>>Listen on port 6789
+[2023-3-17 21:38:48 pid:5377 tid:7ffff7fe9c00  INFO: server.cpp start_tcp_server 350]>>Observer start success
+[2023-3-17 21:38:54 pid:5377 tid:7ffff7fe9c00  INFO: server.cpp accept 278]>>Accepted connection from 127.0.0.1:7319
+
+[2023-3-17 21:39:5 pid:5377 tid:7ffff7fe9c00  INFO: server.cpp recv 175]>>receive command(size=37): create table yam(c1 int, c2 float);
+
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: table.cpp create 64]>>Begin to create table ./miniob/db/sys:yam
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: field_meta.cpp init 70]>>Init a field with name=c1
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: field_meta.cpp init 70]>>Init a field with name=c2
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: table_meta.cpp init 97]>>Sussessfully initialized table meta. table name=yam
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:256, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:512, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:768, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:1024, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:1280, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:1536, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:1792, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:2048, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:2304, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:2560, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:2816, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:3072, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:3328, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:3584, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:3840, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:4096, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:4352, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:4608, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:4864, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:5120, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:5376, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:5632, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:5888, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:6144, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:6400, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:6656, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:6912, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:7168, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:7424, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:7680, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:7936, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:8192, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:8448, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:8704, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:8960, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:9216, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:9472, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:9728, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:9984, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:10240, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:10496, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:10752, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:11008, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:11264, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:11520, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:11776, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:12032, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:12288, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:12544, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:12800, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:13056, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:13312, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:13568, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:13824, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:14080, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:14336, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:14592, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:14848, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:15104, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:15360, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:15616, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:15872, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:16128, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:16384, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:16640, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:16896, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:17152, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:17408, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:17664, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:17920, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:18176, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:18432, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:18688, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:18944, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:19200, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:19456, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:19712, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:19968, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:20224, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:20480, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:20736, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:20992, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:21248, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:21504, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:21760, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:22016, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:22272, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:22528, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:22784, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:23040, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:23296, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:23552, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:23808, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:24064, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:24320, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:24576, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:24832, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:25088, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:25344, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:25600, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:25856, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:26112, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:26368, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:26624, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:26880, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:27136, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:27392, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:27648, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:27904, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:28160, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:28416, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:28672, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:28928, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:29184, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:29440, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:29696, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:29952, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:30208, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:30464, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:30720, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:30976, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:31232, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:31488, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:31744, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:32000, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:32256, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:32512, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:32768, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:33024, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:33280, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:33536, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:33792, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:34048, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:34304, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:34560, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:34816, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:35072, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:35328, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:35584, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:35840, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:36096, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:36352, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:36608, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:36864, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:37120, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:37376, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:37632, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:37888, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:38144, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:38400, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:38656, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:38912, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:39168, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:39424, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:39680, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:39936, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:40192, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:40448, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:40704, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:40960, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:41216, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:41472, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:41728, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:41984, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:42240, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:42496, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:42752, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:43008, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:43264, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:43520, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:43776, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:44032, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:44288, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:44544, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:44800, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:45056, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:45312, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:45568, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:45824, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:46080, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:46336, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:46592, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:46848, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:47104, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:47360, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:47616, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:47872, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:48128, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:48384, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:48640, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:48896, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:49152, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:49408, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:49664, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:49920, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:50176, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:50432, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:50688, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:50944, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:51200, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:51456, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:51712, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:51968, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:52224, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:52480, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:52736, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:52992, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:53248, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:53504, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:53760, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:54016, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:54272, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:54528, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:54784, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:55040, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:55296, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:55552, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:55808, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:56064, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:56320, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:56576, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:56832, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:57088, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:57344, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:57600, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:57856, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:58112, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:58368, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:58624, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:58880, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:59136, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:59392, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:59648, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:59904, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:60160, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:60416, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:60672, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:60928, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:61184, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:61440, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:61696, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:61952, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:62208, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:62464, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:62720, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:62976, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:63232, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:63488, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:63744, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:64000, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:64256, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:64512, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:64768, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:65024, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:65280, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h extend 302]>>Extend one pool, this->size:65536, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: mem_pool.h init 244]>>Extend one pool, this->size:65536, item_num_per_pool:256, this->name:BPManager.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: disk_buffer_pool.cpp create_file 173]>>Successfully create ./miniob/db/sys/yam.data.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: disk_buffer_pool.cpp open_file 204]>>Successfully open file ./miniob/db/sys/yam.data.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: disk_buffer_pool.cpp open_file 242]>>Successfully open ./miniob/db/sys/yam.data. file_id=0, hdr_frame=0x7ffff44f3010
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: record_manager.cpp init 298]>>Successfully open 0.
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: table.cpp create 120]>>Successfully create table ./miniob/db/sys:yam
+[2023-3-17 21:39:5 pid:5377 tid:7fffe67fc700  INFO: db.cpp create_table 75]>>Create table success. table name=yam

@@ -103,20 +103,27 @@ int value_init_date(Value *value, const char *v) {
   // 对读取的日期做合法性校验
   bool b = check_date(y,m,d);
   if(!b) return -1;
-  // TODO 将日期转换成整数
-  int v;
-  int prev_month_day[] = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
+
+  // // TODO 将日期转换成整数
+  // int day = -1;  // 1970.1.1 correspond to 0
+  // int prev_month_day[] = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334};
   
-  v += (y - 1970) * 365;  // year
-  v += prev_month_day[m - 1];  // month
-  v += d - 1;  // day
+  // day += (y - 1970) * 365;  // year
+  // day += prev_month_day[m - 1];  // month
+  // day += d;  // day
 
-  v += (d - 1969) / 4;  // leap day the year before
-  if ((y % 4 == 0) && (m > 2)) v++;  // leap day the year current
+  // day += (y - 1969) / 4;  // leap day the year before
+  // if ((y % 4 == 0) && (m > 2)) day++;  // leap day the year current
 
-  // TODO 将value 的 data 属性修改为转换后的日期
-  value->data = malloc(sizeof(v));
-  memcpy(value->data, &v, sizeof(v));
+  // // TODO 将value 的 data 属性修改为转换后的日期
+  // value->data = malloc(sizeof(day));
+  // memcpy(value->data, &day, sizeof(day));
+
+  const size_t s_len = 11;
+  char *s = (char *)std::malloc(s_len);
+  sprintf(s, "%d-%02d-%02d\0", y, m, d);
+  value->data = s;
+
   return 0;
 }
 
