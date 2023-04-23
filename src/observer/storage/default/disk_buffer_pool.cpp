@@ -52,7 +52,32 @@ Frame *BPManager::alloc(int file_desc, PageNum page_num) {
    * 提示：调用disk_buffer_pool->flush_block()来刷新到磁盘
    * 提示：调用lrucache.victim(victim, new_buffer_tag) 来将vitim页给替换了。
    */
-  
+  if (lrucache.size() < size) { //lru cache大小小于size
+    for (int i = 0; i < size; i++) {
+      if (allocated[i] == false) { // 为这些没有分配的也进行分配标注
+        allocated[i] = true;
+        lrucache.put(BufferTag(file_desc, page_num), i);
+        return &(frame[i]);
+      }
+    }
+    return nullptr;
+  } else {
+    BufferTag victim; // 获得lrucahce中最少使用的页
+    if (lrucache.getVictim(&victim, not_pinned, (void*)(this)) != RC::SUCCESS) {
+      return nullptr;
+    }
+    int idx;
+    if (lrucache.get(victim, &idx) != RC::SUCCESS) {
+      return nullptr;
+    }
+    Frame *victim_frame = &(frame[idx]);
+    RC rc = disk_buffer_pool->flush_block(victim_frame); // 刷到磁盘
+    if (rc != RC::SUCCESS) {
+      return nullptr;
+    }
+    lrucache.victim(victim, BufferTag(file_desc, page_num));
+    return victim_frame;
+  }
   return nullptr;
 }
 

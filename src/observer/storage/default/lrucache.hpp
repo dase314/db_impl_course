@@ -55,8 +55,23 @@ namespace cache {
            *    2.1 如果lru cache已经达到最大容量，则返回RC::BUFFERPOOL_NOBUF
            *    2.2 如果没有达到最大容量，则在_cache_items_list和_cache_items_map中插入新的
            */
-
-          return RC::SUCCESS;
+          auto it = _cache_items_map.find(key); //寻找在map中的迭代器
+          if (_cache_items_map.find(key)!=_cache_items_map.end()){ // 如果key在lru_cache中
+            _cache_items_list.erase(_cache_items_map[key]); //删除
+            _cache_items_list.push_front(key_value_pair_t(key, value)); //加到开头
+            _cache_items_map[key] = _cache_items_list.begin(); //修改map
+            return RC::SUCCESS;
+          }else{// 不在lru cache中
+            if(_cache_items_list.size() >= _max_size){
+              return RC::BUFFERPOOL_NOBUF;
+            }else{// 没达到最大值
+              _cache_items_list.push_front(key_value_pair_t(key, value)); //加到开头
+              _cache_items_map[key] = _cache_items_list.begin();
+              
+              return RC::SUCCESS;
+            }
+          }
+          // return RC::SUCCESS;
         }
 
         RC get(const key_t& key, value_t* res_value) {
@@ -66,8 +81,17 @@ namespace cache {
            * 2. 如果页存在，将key对应的key-value对移动到_cache_items_list的头部，并更新_cache_items_map
            *    将res_value设置为结果value。返回RC::SUCCESS
            */
-
-          return RC::SUCCESS;
+          auto it = _cache_items_map.find(key);
+          if(it==_cache_items_map.end()){ //不存在
+            return RC::NOTFOUND;
+          }else{
+            value_t value = _cache_items_map[key]->second;
+            _cache_items_list.erase(_cache_items_map[key]);
+            _cache_items_list.push_front({key, value});
+            _cache_items_map[key] = _cache_items_list.begin();
+            *res_value = value;
+            return RC::SUCCESS;
+          }
         }
 
         bool exists(const key_t& key) const {
@@ -76,8 +100,8 @@ namespace cache {
            * key存在，返回 true
            * key不存在，返回 false
            */
-
-          return false;
+          bool is_exist = (_cache_items_map.find(key)!=_cache_items_map.end());
+          return is_exist;
         }
 
         size_t size() const {
@@ -86,7 +110,7 @@ namespace cache {
            * 返回LRU cache size
            */
           
-          return 0;
+          return _cache_items_list.size();
         }
 
         RC getVictim(key_t *vic_key, bool (*check)(const key_value_pair_t& kv, void *ctx), void *ctx) const {
@@ -99,6 +123,9 @@ namespace cache {
                * 被驱逐的项目应该满足check条件，check条件一般是: frame的Pin count为0.
                * 2. 返回 RC::SUCCESS
                */
+              // std::cout<<check(*it,ctx)<<endl;
+              *vic_key = it->first;
+              return RC::SUCCESS;
             }
           }
           return RC::NOTFOUND;
@@ -113,14 +140,26 @@ namespace cache {
            * 
            * 比如old_key是4，它的value是40, new_key是5，则删除{4, 40}，建立{5, 40}
            */
-          
-          return RC::SUCCESS;
+          auto it_old = _cache_items_map.find(old_key);
+          if(it_old == _cache_items_map.end()){// 不存在
+            return RC::NOTFOUND;
+          }else{
+            value_t res_value;
+            get(old_key,&res_value); // 得到原本的（k,v）
+            _cache_items_list.erase(it_old->second);//删除原本的（k,v）
+			      _cache_items_map.erase(old_key);
+            _cache_items_list.push_front(key_value_pair_t(new_key, res_value));
+            _cache_items_map[new_key]=_cache_items_list.begin();
+            return SUCCESS;
+          }
         }
 
     public:
-        std::list<key_value_pair_t> _cache_items_list;
-        std::unordered_map<key_t, list_iterator_t, hashfunc> _cache_items_map;
+        std::list<key_value_pair_t> _cache_items_list;     
+        std::unordered_map<key_t, list_iterator_t, hashfunc> _cache_items_map; 
         size_t _max_size;
+        //lsit[(k,v),(k,v),...,(k,v)]
+        // map[(k-(k,v)),(k-(k,v)),...,(k-(k,v))]
     };
 
 } // namespace cache
