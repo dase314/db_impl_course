@@ -1,0 +1,225 @@
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: init.cpp init 200]>>Output configuration 
+Begin dump configuration
+[]
+
+[DefaultStorageStage]
+BaseDir=./miniob
+SystemDb=sys
+ThreadId=IOThreads
+
+[DefaultThreads]
+count=3
+
+[ExecuteStage]
+NextStages=DefaultStorageStage,MemStorageStage
+ThreadId=SQLThreads
+
+[IOThreads]
+count=3
+
+[LOG]
+LOG_CONSOLE_LEVEL=1
+LOG_FILE_LEVEL=3
+LOG_FILE_NAME=observer.log
+
+[MemStorageStage]
+ThreadId=IOThreads
+
+[MetricsStage]
+NextStages=TimerStage
+
+[NET]
+CLIENT_ADDRESS=INADDR_ANY
+MAX_CONNECTION_NUM=8192
+PORT=6789
+
+[OptimizeStage]
+NextStages=ExecuteStage
+ThreadId=SQLThreads
+
+[ParseStage]
+NextStages=OptimizeStage
+ThreadId=SQLThreads
+
+[PlanCacheStage]
+NextStages=ExecuteStage,ParseStage
+ThreadId=SQLThreads
+
+[QueryCacheStage]
+NextStages=PlanCacheStage
+ThreadId=SQLThreads
+
+[ResolveStage]
+NextStages=QueryCacheStage
+ThreadId=SQLThreads
+
+[SEDA_BASE]
+EventHistory=false
+MaxEventHistoryNum=100
+STAGES=SessionStage,ExecuteStage,OptimizeStage,ParseStage,ResolveStage,PlanCacheStage,QueryCacheStage,DefaultStorageStage,MemStorageStage,TimerStage,MetricsStage
+ThreadPools=SQLThre
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: init.cpp init_seda 63]>>(Re)Starting State: Pid: 1762 Time: Sun Apr 23 11:15:34 2023
+
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: init.cpp init_seda 64]>>The process Name is observer
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: seda_config.cpp init_event_history 209]>>Successfully init_event_history, EventHistory:0, MaxEventHops:100
+[2023-4-23 11:15:34 pid:1762 tid:7f08765ac700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7f08765ac700, threadname = SQLThreads
+
+[2023-4-23 11:15:34 pid:1762 tid:7f0875dab700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7f0875dab700, threadname = SQLThreads
+
+[2023-4-23 11:15:34 pid:1762 tid:7f0874da9700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7f0874da9700, threadname = IOThreads
+
+[2023-4-23 11:15:34 pid:1762 tid:7f08755aa700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7f08755aa700, threadname = SQLThreads
+
+[2023-4-23 11:15:34 pid:1762 tid:7f086ffff700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7f086ffff700, threadname = IOThreads
+
+[2023-4-23 11:15:34 pid:1762 tid:7f086f7fe700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7f086f7fe700, threadname = IOThreads
+
+[2023-4-23 11:15:34 pid:1762 tid:7f086effd700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7f086effd700, threadname = DefaultThreads
+
+[2023-4-23 11:15:34 pid:1762 tid:7f086e7fc700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7f086e7fc700, threadname = DefaultThreads
+
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: seda_config.cpp init_stages 354]>>Stage SessionStage use threadpool DefaultThreads.
+[2023-4-23 11:15:34 pid:1762 tid:7f086dffb700  INFO: thread_pool.cpp run_thread 258]>>threadid = 7f086dffb700, threadname = DefaultThreads
+
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: seda_config.cpp init_stages 354]>>Stage ExecuteStage use threadpool DefaultThreads.
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: seda_config.cpp init_stages 354]>>Stage OptimizeStage use threadpool DefaultThreads.
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: seda_config.cpp init_stages 354]>>Stage ParseStage use threadpool DefaultThreads.
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: seda_config.cpp init_stages 354]>>Stage ResolveStage use threadpool DefaultThreads.
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: seda_config.cpp init_stages 354]>>Stage PlanCacheStage use threadpool DefaultThreads.
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: seda_config.cpp init_stages 354]>>Stage QueryCacheStage use threadpool DefaultThreads.
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: default_storage_stage.cpp set_properties 89]>>Use sys as system db
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: default_handler.cpp init 52]>>Default handler init with ./miniob success
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  WARNNING: default_handler.cpp create_db 74]>>Db already exists: sys
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: field_meta.cpp init 70]>>Init a field with name=c1
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: field_meta.cpp init 70]>>Init a field with name=c2
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: disk_buffer_pool.cpp open_file 176]>>Successfully open file ./miniob/db/sys/table1.data.
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: disk_buffer_pool.cpp open_file 218]>>Successfully open ./miniob/db/sys/table1.data. file_id=0, hdr_frame=0x558a071d91b0
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: db.cpp open_all_tables 121]>>Open table: table1, file: table1.table
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: field_meta.cpp init 70]>>Init a field with name=test
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: disk_buffer_pool.cpp open_file 176]>>Successfully open file ./miniob/db/sys/t.data.
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: disk_buffer_pool.cpp open_file 218]>>Successfully open ./miniob/db/sys/t.data. file_id=1, hdr_frame=0x558a071da1c8
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: db.cpp open_all_tables 121]>>Open table: t, file: t.table
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: field_meta.cpp init 70]>>Init a field with name=__trx
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: field_meta.cpp init 70]>>Init a field with name=c1
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: field_meta.cpp init 70]>>Init a field with name=c2
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: disk_buffer_pool.cpp open_file 176]>>Successfully open file ./miniob/db/sys/usertable.data.
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: disk_buffer_pool.cpp open_file 218]>>Successfully open ./miniob/db/sys/usertable.data. file_id=2, hdr_frame=0x558a071db1e0
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: db.cpp open_all_tables 121]>>Open table: usertable, file: usertable.table
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: db.cpp open_all_tables 124]>>All table have been opened. num=3
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: default_storage_stage.cpp set_properties 113]>>Open system db success: sys
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: seda_config.cpp init_stages 354]>>Stage DefaultStorageStage use threadpool DefaultThreads.
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: seda_config.cpp init_stages 354]>>Stage MemStorageStage use threadpool DefaultThreads.
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for TimerStage, use default threadpool DefaultThreads
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: seda_config.cpp init_stages 354]>>Stage TimerStage use threadpool DefaultThreads.
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: seda_config.cpp get_thread_pool 296]>>Not set thread_pool_id for MetricsStage, use default threadpool DefaultThreads
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: seda_config.cpp init_stages 354]>>Stage MetricsStage use threadpool DefaultThreads.
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :DefaultStorageStage.query
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.sql
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: init.cpp init 224]>>Successfully init utility
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.readsocket
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: metrics_registry.cpp register_metric 37]>>Successfully register metric :SessionStage.writesocket
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: server.cpp start_tcp_server 333]>>Listen on port 6789
+[2023-4-23 11:15:34 pid:1762 tid:7f0877970740  INFO: server.cpp start_tcp_server 352]>>Observer start success
+[2023-4-23 11:15:55 pid:1762 tid:7f0877970740  INFO: server.cpp accept 278]>>Accepted connection from 127.0.0.1:22669
+
+[2023-4-23 11:16:7 pid:1762 tid:7f0877970740  INFO: server.cpp recv 171]>>receive command(size=14): show tables;
+
+[2023-4-23 11:16:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>DefaultStorageStage.query:mean:0,tps:0.0166667
+[2023-4-23 11:16:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>SessionStage.readsocket:mean:0,tps:0.0166667
+[2023-4-23 11:16:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>SessionStage.sql:mean:0,tps:0.0166667
+[2023-4-23 11:16:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>SessionStage.writesocket:mean:0,tps:0.0333333
+[2023-4-23 11:16:53 pid:1762 tid:7f0877970740  INFO: server.cpp recv 171]>>receive command(size=23): select * from table1;
+
+[2023-4-23 11:17:34 pid:1762 tid:7f086dffb700  INFO: log_reporter.cpp report 36]>>DefaultStorageStage.query:mean:0,tps:0
+[2023-4-23 11:17:34 pid:1762 tid:7f086dffb700  INFO: log_reporter.cpp report 36]>>SessionStage.readsocket:mean:0,tps:0.0166667
+[2023-4-23 11:17:34 pid:1762 tid:7f086dffb700  INFO: log_reporter.cpp report 36]>>SessionStage.sql:mean:0,tps:0.0166667
+[2023-4-23 11:17:34 pid:1762 tid:7f086dffb700  INFO: log_reporter.cpp report 36]>>SessionStage.writesocket:mean:0,tps:0.0333333
+[2023-4-23 11:17:36 pid:1762 tid:7f0877970740  INFO: server.cpp recv 171]>>receive command(size=38): create table table2(c1 int, c2 int);
+
+[2023-4-23 11:17:36 pid:1762 tid:7f086effd700  INFO: table.cpp create 54]>>Begin to create table ./miniob/db/sys:table2
+[2023-4-23 11:17:36 pid:1762 tid:7f086effd700  INFO: field_meta.cpp init 70]>>Init a field with name=c1
+[2023-4-23 11:17:36 pid:1762 tid:7f086effd700  INFO: field_meta.cpp init 70]>>Init a field with name=c2
+[2023-4-23 11:17:36 pid:1762 tid:7f086effd700  INFO: table_meta.cpp init 105]>>Init table meta success. table name=table2
+[2023-4-23 11:17:36 pid:1762 tid:7f086effd700  INFO: disk_buffer_pool.cpp create_file 146]>>Successfully create ./miniob/db/sys/table2.data.
+[2023-4-23 11:17:36 pid:1762 tid:7f086effd700  INFO: disk_buffer_pool.cpp open_file 176]>>Successfully open file ./miniob/db/sys/table2.data.
+[2023-4-23 11:17:36 pid:1762 tid:7f086effd700  INFO: disk_buffer_pool.cpp open_file 218]>>Successfully open ./miniob/db/sys/table2.data. file_id=3, hdr_frame=0x558a071dc1f8
+[2023-4-23 11:17:36 pid:1762 tid:7f086effd700  INFO: table.cpp create 115]>>Successfully create table ./miniob/db/sys:table2
+[2023-4-23 11:17:36 pid:1762 tid:7f086effd700  INFO: db.cpp create_table 68]>>Create table success. table name=table2
+[2023-4-23 11:18:18 pid:1762 tid:7f0877970740  INFO: server.cpp recv 171]>>receive command(size=38): create table table3(c1 int, c2 int);
+
+[2023-4-23 11:18:18 pid:1762 tid:7f086e7fc700  INFO: table.cpp create 54]>>Begin to create table ./miniob/db/sys:table3
+[2023-4-23 11:18:18 pid:1762 tid:7f086e7fc700  INFO: field_meta.cpp init 70]>>Init a field with name=c1
+[2023-4-23 11:18:18 pid:1762 tid:7f086e7fc700  INFO: field_meta.cpp init 70]>>Init a field with name=c2
+[2023-4-23 11:18:18 pid:1762 tid:7f086e7fc700  INFO: table_meta.cpp init 105]>>Init table meta success. table name=table3
+[2023-4-23 11:18:18 pid:1762 tid:7f086e7fc700  INFO: disk_buffer_pool.cpp create_file 146]>>Successfully create ./miniob/db/sys/table3.data.
+[2023-4-23 11:18:18 pid:1762 tid:7f086e7fc700  INFO: disk_buffer_pool.cpp open_file 176]>>Successfully open file ./miniob/db/sys/table3.data.
+[2023-4-23 11:18:18 pid:1762 tid:7f086e7fc700  INFO: disk_buffer_pool.cpp open_file 218]>>Successfully open ./miniob/db/sys/table3.data. file_id=4, hdr_frame=0x558a071dd210
+[2023-4-23 11:18:18 pid:1762 tid:7f086e7fc700  INFO: table.cpp create 115]>>Successfully create table ./miniob/db/sys:table3
+[2023-4-23 11:18:18 pid:1762 tid:7f086e7fc700  INFO: db.cpp create_table 68]>>Create table success. table name=table3
+[2023-4-23 11:18:34 pid:1762 tid:7f086dffb700  INFO: log_reporter.cpp report 36]>>DefaultStorageStage.query:mean:0.5,tps:0.0333333
+[2023-4-23 11:18:34 pid:1762 tid:7f086dffb700  INFO: log_reporter.cpp report 36]>>SessionStage.readsocket:mean:0,tps:0.0333333
+[2023-4-23 11:18:34 pid:1762 tid:7f086dffb700  INFO: log_reporter.cpp report 36]>>SessionStage.sql:mean:0.5,tps:0.0333333
+[2023-4-23 11:18:34 pid:1762 tid:7f086dffb700  INFO: log_reporter.cpp report 36]>>SessionStage.writesocket:mean:0,tps:0.0666667
+[2023-4-23 11:18:38 pid:1762 tid:7f0877970740  INFO: server.cpp recv 171]>>receive command(size=38): create table table4(c1 int, c2 int);
+
+[2023-4-23 11:18:38 pid:1762 tid:7f086effd700  INFO: table.cpp create 54]>>Begin to create table ./miniob/db/sys:table4
+[2023-4-23 11:18:38 pid:1762 tid:7f086effd700  INFO: field_meta.cpp init 70]>>Init a field with name=c1
+[2023-4-23 11:18:38 pid:1762 tid:7f086effd700  INFO: field_meta.cpp init 70]>>Init a field with name=c2
+[2023-4-23 11:18:38 pid:1762 tid:7f086effd700  INFO: table_meta.cpp init 105]>>Init table meta success. table name=table4
+[2023-4-23 11:18:38 pid:1762 tid:7f086effd700  INFO: disk_buffer_pool.cpp create_file 146]>>Successfully create ./miniob/db/sys/table4.data.
+[2023-4-23 11:18:38 pid:1762 tid:7f086effd700  INFO: disk_buffer_pool.cpp open_file 176]>>Successfully open file ./miniob/db/sys/table4.data.
+[2023-4-23 11:18:38 pid:1762 tid:7f086effd700  INFO: disk_buffer_pool.cpp open_file 218]>>Successfully open ./miniob/db/sys/table4.data. file_id=5, hdr_frame=0x558a071de228
+[2023-4-23 11:18:38 pid:1762 tid:7f086effd700  INFO: table.cpp create 115]>>Successfully create table ./miniob/db/sys:table4
+[2023-4-23 11:18:38 pid:1762 tid:7f086effd700  INFO: db.cpp create_table 68]>>Create table success. table name=table4
+[2023-4-23 11:19:9 pid:1762 tid:7f0877970740  INFO: server.cpp recv 171]>>receive command(size=38): create table table5(c1 int, c2 int);
+
+[2023-4-23 11:19:9 pid:1762 tid:7f086e7fc700  INFO: table.cpp create 54]>>Begin to create table ./miniob/db/sys:table5
+[2023-4-23 11:19:9 pid:1762 tid:7f086e7fc700  INFO: field_meta.cpp init 70]>>Init a field with name=c1
+[2023-4-23 11:19:9 pid:1762 tid:7f086e7fc700  INFO: field_meta.cpp init 70]>>Init a field with name=c2
+[2023-4-23 11:19:9 pid:1762 tid:7f086e7fc700  INFO: table_meta.cpp init 105]>>Init table meta success. table name=table5
+[2023-4-23 11:19:9 pid:1762 tid:7f086e7fc700  INFO: disk_buffer_pool.cpp create_file 146]>>Successfully create ./miniob/db/sys/table5.data.
+[2023-4-23 11:19:9 pid:1762 tid:7f086e7fc700  INFO: disk_buffer_pool.cpp open_file 176]>>Successfully open file ./miniob/db/sys/table5.data.
+[2023-4-23 11:19:9 pid:1762 tid:7f086e7fc700  INFO: disk_buffer_pool.cpp open_file 218]>>Successfully open ./miniob/db/sys/table5.data. file_id=6, hdr_frame=0x558a071df240
+[2023-4-23 11:19:9 pid:1762 tid:7f086e7fc700  INFO: table.cpp create 115]>>Successfully create table ./miniob/db/sys:table5
+[2023-4-23 11:19:9 pid:1762 tid:7f086e7fc700  INFO: db.cpp create_table 68]>>Create table success. table name=table5
+[2023-4-23 11:19:15 pid:1762 tid:7f0877970740  INFO: server.cpp recv 171]>>receive command(size=14): show tables;
+
+[2023-4-23 11:19:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>DefaultStorageStage.query:mean:0,tps:0.05
+[2023-4-23 11:19:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>SessionStage.readsocket:mean:0,tps:0.05
+[2023-4-23 11:19:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>SessionStage.sql:mean:0,tps:0.05
+[2023-4-23 11:19:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>SessionStage.writesocket:mean:0,tps:0.1
+[2023-4-23 11:19:56 pid:1762 tid:7f0877970740  INFO: server.cpp recv 171]>>receive command(size=33): insert into table1 values(1,1);
+
+[2023-4-23 11:19:56 pid:1762 tid:7f086e7fc700  INFO: record_manager.cpp insert_record 427]>>miniob bpmanager: after inserting record, the elements in lru cache is: 
+[2023-4-23 11:20:5 pid:1762 tid:7f0877970740  INFO: server.cpp recv 171]>>receive command(size=33): insert into table2 values(1,1);
+
+[2023-4-23 11:20:5 pid:1762 tid:7f086dffb700  INFO: record_manager.cpp insert_record 427]>>miniob bpmanager: after inserting record, the elements in lru cache is: 
+[2023-4-23 11:20:12 pid:1762 tid:7f0877970740  INFO: server.cpp recv 171]>>receive command(size=33): insert into table3 values(1,1);
+
+[2023-4-23 11:20:12 pid:1762 tid:7f086effd700  INFO: record_manager.cpp insert_record 427]>>miniob bpmanager: after inserting record, the elements in lru cache is: 
+[2023-4-23 11:20:20 pid:1762 tid:7f0877970740  INFO: server.cpp recv 171]>>receive command(size=33): insert into table4 values(1,1);
+
+[2023-4-23 11:20:20 pid:1762 tid:7f086e7fc700  INFO: record_manager.cpp insert_record 427]>>miniob bpmanager: after inserting record, the elements in lru cache is: 
+[2023-4-23 11:20:31 pid:1762 tid:7f0877970740  INFO: server.cpp recv 171]>>receive command(size=33): insert into table5 values(1,1);
+
+[2023-4-23 11:20:31 pid:1762 tid:7f086dffb700  INFO: record_manager.cpp insert_record 427]>>miniob bpmanager: after inserting record, the elements in lru cache is: 
+[2023-4-23 11:20:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>DefaultStorageStage.query:mean:0,tps:0.0833333
+[2023-4-23 11:20:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>SessionStage.readsocket:mean:0,tps:0.0833333
+[2023-4-23 11:20:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>SessionStage.sql:mean:0,tps:0.0833333
+[2023-4-23 11:20:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>SessionStage.writesocket:mean:0,tps:0.166667
+[2023-4-23 11:20:39 pid:1762 tid:7f0877970740  INFO: server.cpp recv 171]>>receive command(size=33): insert into table1 values(2,2);
+
+[2023-4-23 11:20:39 pid:1762 tid:7f086e7fc700  INFO: record_manager.cpp insert_record 427]>>miniob bpmanager: after inserting record, the elements in lru cache is: 
+[2023-4-23 11:20:46 pid:1762 tid:7f0877970740  INFO: server.cpp recv 171]>>receive command(size=33): insert into table5 values(2,2);
+
+[2023-4-23 11:20:46 pid:1762 tid:7f086dffb700  INFO: record_manager.cpp insert_record 427]>>miniob bpmanager: after inserting record, the elements in lru cache is: 
+[2023-4-23 11:21:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>DefaultStorageStage.query:mean:0,tps:0.0333333
+[2023-4-23 11:21:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>SessionStage.readsocket:mean:0,tps:0.0333333
+[2023-4-23 11:21:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>SessionStage.sql:mean:0,tps:0.0333333
+[2023-4-23 11:21:34 pid:1762 tid:7f086effd700  INFO: log_reporter.cpp report 36]>>SessionStage.writesocket:mean:0,tps:0.0666667
+[2023-4-23 11:21:53 pid:1762 tid:7f0877970740  INFO: server.cpp recv 161]>>The peer has been closed 127.0.0.1:22669
+
+[2023-4-23 11:21:53 pid:1762 tid:7f0877970740  INFO: server.cpp close_connection 98]>>Close connection of 127.0.0.1:22669.
