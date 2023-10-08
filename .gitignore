@@ -7,3 +7,5 @@ deps/libevent/
 .idea/
 .vscode/
 .vscode-server/
+miniob/
+.DS_Store

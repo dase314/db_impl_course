@@ -1,33 +1,35 @@
-/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its affiliates. All rights reserved.
-miniob is licensed under Mulan PSL v2.
-You can use this software according to the terms and conditions of the Mulan PSL v2.
-You may obtain a copy of Mulan PSL v2 at:
-         http://license.coscl.org.cn/MulanPSL2
-THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its
+affiliates. All rights reserved. miniob is licensed under Mulan PSL v2. You can
+use this software according to the terms and conditions of the Mulan PSL v2. You
+may obtain a copy of Mulan PSL v2 at: http://license.coscl.org.cn/MulanPSL2 THIS
+SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 See the Mulan PSL v2 for more details. */
 
 //
-// Created by Meiyi & Longda on 2021/5/11.
+// Created by Longda on 2021/5/11.
 //
 #ifndef __OBSERVER_STORAGE_DEFAULT_ENGINE_H__
 #define __OBSERVER_STORAGE_DEFAULT_ENGINE_H__
 
-#include <string>
 #include <map>
+#include <string>
 
 #include "storage/common/db.h"
 
 class Trx;
 
 class DefaultHandler {
-public:
+ public:
   DefaultHandler();
 
-  virtual ~DefaultHandler() noexcept;
+  virtual ~DefaultHandler()
+
+      noexcept;
 
   RC init(const char *base_dir);
+
   void destroy();
 
   /**
@@ -81,7 +83,8 @@ public:
    * @param attributes
    * @return
    */
-  RC create_table(const char *dbname, const char *relation_name, int attribute_count, const AttrInfo *attributes);
+  RC create_table(const char *dbname, const char *relation_name,
+                  int attribute_count, const AttrInfo *attributes);
 
   /**
    * 销毁名为relName的表以及在该表上建立的所有索引
@@ -102,8 +105,8 @@ public:
    * @param attrName
    * @return
    */
-  RC create_index(
-      Trx *trx, const char *dbname, const char *relation_name, const char *index_name, const char *attribute_name);
+  RC create_index(Trx *trx, const char *dbname, const char *relation_name,
+                  const char *index_name, const char *attribute_name);
 
   /**
    * 该函数用来删除名为indexName的索引。
@@ -111,7 +114,8 @@ public:
    * @param index_name
    * @return
    */
-  RC drop_index(Trx *trx, const char *dbname, const char *relation_name, const char *index_name);
+  RC drop_index(Trx *trx, const char *dbname, const char *relation_name,
+                const char *index_name);
 
   /**
    * 该函数用来在relName表中插入具有指定属性值的新元组，
@@ -123,7 +127,8 @@ public:
    * @param values
    * @return
    */
-  RC insert_record(Trx *trx, const char *dbname, const char *relation_name, int value_num, const Value *values);
+  RC insert_record(Trx *trx, const char *dbname, const char *relation_name,
+                   int value_num, const Value *values);
 
   /**
    * 该函数用来删除relName表中所有满足指定条件的元组以及该元组对应的索引项。
@@ -134,8 +139,9 @@ public:
    * @param conditions
    * @return
    */
-  RC delete_record(Trx *trx, const char *dbname, const char *relation_name, int condition_num,
-      const Condition *conditions, int *deleted_count);
+  RC delete_record(Trx *trx, const char *dbname, const char *relation_name,
+                   int condition_num, const Condition *conditions,
+                   int *deleted_count);
 
   /**
    * 该函数用于更新relName表中所有满足指定条件的元组，
@@ -149,19 +155,22 @@ public:
    * @param conditions
    * @return
    */
-  RC update_record(Trx *trx, const char *dbname, const char *relation_name, const char *attribute_name,
-      const Value *value, int condition_num, const Condition *conditions, int *updated_count);
+  RC update_record(Trx *trx, const char *dbname, const char *relation_name,
+                   const char *attribute_name, const Value *value,
+                   int condition_num, const Condition *conditions,
+                   int *updated_count);
 
-public:
+ public:
   Db *find_db(const char *dbname) const;
+
   Table *find_table(const char *dbname, const char *table_name) const;
 
   RC sync();
 
-public:
+ public:
   static DefaultHandler &get_default();
 
-private:
+ private:
   std::string base_dir_;
   std::string db_dir_;
   std::map<std::string, Db *> opened_dbs_;

@@ -1,30 +1,29 @@
-/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its affiliates. All rights reserved.
-miniob is licensed under Mulan PSL v2.
-You can use this software according to the terms and conditions of the Mulan PSL v2.
-You may obtain a copy of Mulan PSL v2 at:
-         http://license.coscl.org.cn/MulanPSL2
-THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its
+affiliates. All rights reserved. miniob is licensed under Mulan PSL v2. You can
+use this software according to the terms and conditions of the Mulan PSL v2. You
+may obtain a copy of Mulan PSL v2 at: http://license.coscl.org.cn/MulanPSL2 THIS
+SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 See the Mulan PSL v2 for more details. */
 
 //
-// Created by Meiyi & Wangyunlai on 2021/5/7.
+// Created by Wangyunlai on 2021/5/7.
 //
 
-#include <stddef.h>
 #include "condition_filter.h"
-#include "record_manager.h"
+
+#include <stddef.h>
+
 #include "common/log/log.h"
+#include "record_manager.h"
 #include "storage/common/table.h"
 
 using namespace common;
 
-ConditionFilter::~ConditionFilter()
-{}
+ConditionFilter::~ConditionFilter() {}
 
-DefaultConditionFilter::DefaultConditionFilter()
-{
+DefaultConditionFilter::DefaultConditionFilter() {
   left_.is_attr = false;
   left_.attr_length = 0;
   left_.attr_offset = 0;
@@ -35,18 +34,20 @@ DefaultConditionFilter::DefaultConditionFilter()
   right_.attr_offset = 0;
   right_.value = nullptr;
 }
-DefaultConditionFilter::~DefaultConditionFilter()
-{}
 
-RC DefaultConditionFilter::init(const ConDesc &left, const ConDesc &right, AttrType attr_type, CompOp comp_op)
-{
+DefaultConditionFilter::~DefaultConditionFilter() {}
+
+RC DefaultConditionFilter::init(const ConDesc &left, const ConDesc &right,
+                                AttrType attr_type, CompOp comp_op) {
   if (attr_type < CHARS || attr_type > FLOATS) {
-    LOG_ERROR("Invalid condition with unsupported attribute type: %d", attr_type);
+    LOG_ERROR("Invalid condition with unsupported attribute type: %d",
+              attr_type);
     return RC::INVALID_ARGUMENT;
   }
 
   if (comp_op < EQUAL_TO || comp_op >= NO_OP) {
-    LOG_ERROR("Invalid condition with unsupported compare operation: %d", comp_op);
+    LOG_ERROR("Invalid condition with unsupported compare operation: %d",
+              comp_op);
     return RC::INVALID_ARGUMENT;
   }
 
@@ -57,8 +58,7 @@ RC DefaultConditionFilter::init(const ConDesc &left, const ConDesc &right, AttrT
   return RC::SUCCESS;
 }
 
-RC DefaultConditionFilter::init(Table &table, const Condition &condition)
-{
+RC DefaultConditionFilter::init(Table &table, const Condition &condition) {
   const TableMeta &table_meta = table.table_meta();
   ConDesc left;
   ConDesc right;
@@ -68,9 +68,11 @@ RC DefaultConditionFilter::init(Table &table, const Condition &condition)
 
   if (1 == condition.left_is_attr) {
     left.is_attr = true;
-    const FieldMeta *field_left = table_meta.field(condition.left_attr.attribute_name);
+    const FieldMeta *field_left =
+        table_meta.field(condition.left_attr.attribute_name);
     if (nullptr == field_left) {
-      LOG_WARN("No such field in condition. %s.%s", table.name(), condition.left_attr.attribute_name);
+      LOG_WARN("No such field in condition. %s.%s", table.name(),
+               condition.left_attr.attribute_name);
       return RC::SCHEMA_FIELD_MISSING;
     }
     left.attr_length = field_left->len();
@@ -90,9 +92,11 @@ RC DefaultConditionFilter::init(Table &table, const Condition &condition)
 
   if (1 == condition.right_is_attr) {
     right.is_attr = true;
-    const FieldMeta *field_right = table_meta.field(condition.right_attr.attribute_name);
+    const FieldMeta *field_right =
+        table_meta.field(condition.right_attr.attribute_name);
     if (nullptr == field_right) {
-      LOG_WARN("No such field in condition. %s.%s", table.name(), condition.right_attr.attribute_name);
+      LOG_WARN("No such field in condition. %s.%s", table.name(),
+               condition.right_attr.attribute_name);
       return RC::SCHEMA_FIELD_MISSING;
     }
     right.attr_length = field_right->len();
@@ -123,8 +127,7 @@ RC DefaultConditionFilter::init(Table &table, const Condition &condition)
   return init(left, right, type_left, condition.comp);
 }
 
-bool DefaultConditionFilter::filter(const Record &rec) const
-{
+bool DefaultConditionFilter::filter(const Record &rec) const {
   char *left_value = nullptr;
   char *right_value = nullptr;
 
@@ -184,28 +187,28 @@ bool DefaultConditionFilter::filter(const Record &rec) const
   return cmp_result;  // should not go here
 }
 
-CompositeConditionFilter::~CompositeConditionFilter()
-{
+CompositeConditionFilter::~CompositeConditionFilter() {
   if (memory_owner_) {
     delete[] filters_;
     filters_ = nullptr;
   }
 }
 
-RC CompositeConditionFilter::init(const ConditionFilter *filters[], int filter_num, bool own_memory)
-{
+RC CompositeConditionFilter::init(const ConditionFilter *filters[],
+                                  int filter_num, bool own_memory) {
   filters_ = filters;
   filter_num_ = filter_num;
   memory_owner_ = own_memory;
   return RC::SUCCESS;
 }
-RC CompositeConditionFilter::init(const ConditionFilter *filters[], int filter_num)
-{
+
+RC CompositeConditionFilter::init(const ConditionFilter *filters[],
+                                  int filter_num) {
   return init(filters, filter_num, false);
 }
 
-RC CompositeConditionFilter::init(Table &table, const Condition *conditions, int condition_num)
-{
+RC CompositeConditionFilter::init(Table &table, const Condition *conditions,
+                                  int condition_num) {
   if (condition_num == 0) {
     return RC::SUCCESS;
   }
@@ -216,7 +219,8 @@ RC CompositeConditionFilter::init(Table &table, const Condition *conditions, int
   RC rc = RC::SUCCESS;
   ConditionFilter **condition_filters = new ConditionFilter *[condition_num];
   for (int i = 0; i < condition_num; i++) {
-    DefaultConditionFilter *default_condition_filter = new DefaultConditionFilter();
+    DefaultConditionFilter *default_condition_filter =
+        new DefaultConditionFilter();
     rc = default_condition_filter->init(table, conditions[i]);
     if (rc != RC::SUCCESS) {
       delete default_condition_filter;
@@ -233,8 +237,7 @@ RC CompositeConditionFilter::init(Table &table, const Condition *conditions, int
   return init((const ConditionFilter **)condition_filters, condition_num, true);
 }
 
-bool CompositeConditionFilter::filter(const Record &rec) const
-{
+bool CompositeConditionFilter::filter(const Record &rec) const {
   for (int i = 0; i < filter_num_; i++) {
     if (!filters_[i]->filter(rec)) {
       return false;

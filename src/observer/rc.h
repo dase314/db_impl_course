@@ -1,10 +1,9 @@
-/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its affiliates. All rights reserved.
-miniob is licensed under Mulan PSL v2.
-You can use this software according to the terms and conditions of the Mulan PSL v2.
-You may obtain a copy of Mulan PSL v2 at:
-         http://license.coscl.org.cn/MulanPSL2
-THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its
+affiliates. All rights reserved. miniob is licensed under Mulan PSL v2. You can
+use this software according to the terms and conditions of the Mulan PSL v2. You
+may obtain a copy of Mulan PSL v2 at: http://license.coscl.org.cn/MulanPSL2 THIS
+SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 See the Mulan PSL v2 for more details. */
 
@@ -211,11 +210,14 @@ enum RC {
   BUFFERPOOL_OPEN = (BUFFERPOOL | (RCBufferPool::BP_OPEN << 8)),
   BUFFERPOOL_NOBUF = (BUFFERPOOL | (RCBufferPool::BP_NOBUF << 8)),
   BUFFERPOOL_EOF = (BUFFERPOOL | (RCBufferPool::BP_EOF << 8)),
-  BUFFERPOOL_INVALID_PAGE_NUM = (BUFFERPOOL | (RCBufferPool::BP_INVALIDPAGENUM << 8)),
+  BUFFERPOOL_INVALID_PAGE_NUM =
+      (BUFFERPOOL | (RCBufferPool::BP_INVALIDPAGENUM << 8)),
   BUFFERPOOL_NOTINBUF = (BUFFERPOOL | (RCBufferPool::BP_NOTINBUF << 8)),
   BUFFERPOOL_PAGE_PINNED = (BUFFERPOOL | (RCBufferPool::BP_PAGE_PINNED << 8)),
-  BUFFERPOOL_OPEN_TOO_MANY_FILES = (BUFFERPOOL | (RCBufferPool::BP_OPEN_TOO_MANY_FILES << 8)),
-  BUFFERPOOL_ILLEGAL_FILE_ID = (BUFFERPOOL | (RCBufferPool::BP_ILLEGAL_FILE_ID << 8)),
+  BUFFERPOOL_OPEN_TOO_MANY_FILES =
+      (BUFFERPOOL | (RCBufferPool::BP_OPEN_TOO_MANY_FILES << 8)),
+  BUFFERPOOL_ILLEGAL_FILE_ID =
+      (BUFFERPOOL | (RCBufferPool::BP_ILLEGAL_FILE_ID << 8)),
 
   /* record part */
   RECORD_CLOSED = (RECORD | (RCRecord::RD_CLOSED << 8)),
