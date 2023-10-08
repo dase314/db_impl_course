@@ -1,63 +1,63 @@
-/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its
-affiliates. All rights reserved. miniob is licensed under Mulan PSL v2. You can
-use this software according to the terms and conditions of the Mulan PSL v2. You
-may obtain a copy of Mulan PSL v2 at: http://license.coscl.org.cn/MulanPSL2 THIS
-SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
+/* Copyright (c) 2021 Xie Meiyi(xiemeiyi@hust.edu.cn) and OceanBase and/or its affiliates. All rights reserved.
+miniob is licensed under Mulan PSL v2.
+You can use this software according to the terms and conditions of the Mulan PSL v2.
+You may obtain a copy of Mulan PSL v2 at:
+         http://license.coscl.org.cn/MulanPSL2
+THIS SOFTWARE IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND,
+EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT,
 MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE.
 See the Mulan PSL v2 for more details. */
 
 //
-// Created by Longda on 2021/4/13.
+// Created by Meiyi & Longda on 2021/4/13.
 //
 
-#include "storage/default/default_storage_stage.h"
-
 #include <string.h>
-
 #include <string>
+
+#include "storage/default/default_storage_stage.h"
 
 #include "common/conf/ini.h"
 #include "common/io/io.h"
 #include "common/lang/string.h"
 #include "common/log/log.h"
-#include "common/metrics/metrics_registry.h"
 #include "common/seda/timer_stage.h"
+#include "common/metrics/metrics_registry.h"
+#include "rc.h"
+#include "storage/default/default_handler.h"
+#include "storage/common/condition_filter.h"
+#include "storage/common/table.h"
+#include "storage/common/table_meta.h"
+#include "storage/trx/trx.h"
 #include "event/execution_plan_event.h"
 #include "event/session_event.h"
 #include "event/sql_event.h"
 #include "event/storage_event.h"
-#include "rc.h"
 #include "session/session.h"
-#include "storage/common/condition_filter.h"
-#include "storage/common/table.h"
-#include "storage/common/table_meta.h"
-#include "storage/default/default_handler.h"
-#include "storage/trx/trx.h"
 
 using namespace common;
 
-const std::string DefaultStorageStage::QUERY_METRIC_TAG =
-    "DefaultStorageStage.query";
+const std::string DefaultStorageStage::QUERY_METRIC_TAG = "DefaultStorageStage.query";
 const char *CONF_BASE_DIR = "BaseDir";
 const char *CONF_SYSTEM_DB = "SystemDb";
 
 const char *DEFAULT_SYSTEM_DB = "sys";
 
 //! Constructor
-DefaultStorageStage::DefaultStorageStage(const char *tag)
-    : Stage(tag), handler_(nullptr) {}
+DefaultStorageStage::DefaultStorageStage(const char *tag) : Stage(tag), handler_(nullptr)
+{}
 
 //! Destructor
-DefaultStorageStage::~DefaultStorageStage() {
+DefaultStorageStage::~DefaultStorageStage()
+{
   delete handler_;
   handler_ = nullptr;
 }
 
 //! Parse properties, instantiate a stage object
-Stage *DefaultStorageStage::make_stage(const std::string &tag) {
-  DefaultStorageStage *stage =
-      new (std::nothrow) DefaultStorageStage(tag.c_str());
+Stage *DefaultStorageStage::make_stage(const std::string &tag)
+{
+  DefaultStorageStage *stage = new (std::nothrow) DefaultStorageStage(tag.c_str());
   if (stage == nullptr) {
     LOG_ERROR("new DefaultStorageStage failed");
     return nullptr;
@@ -67,14 +67,13 @@ Stage *DefaultStorageStage::make_stage(const std::string &tag) {
 }
 
 //! Set properties for this object set in stage specific properties
-bool DefaultStorageStage::set_properties() {
+bool DefaultStorageStage::set_properties()
+{
   std::string stageNameStr(stage_name_);
-  std::map<std::string, std::string> section =
-      get_properties()->get(stageNameStr);
+  std::map<std::string, std::string> section = get_properties()->get(stageNameStr);
 
   // 初始化时打开默认的database，没有的话会自动创建
-  std::map<std::string, std::string>::iterator iter =
-      section.find(CONF_BASE_DIR);
+  std::map<std::string, std::string>::iterator iter = section.find(CONF_BASE_DIR);
   if (iter == section.end()) {
     LOG_ERROR("Config cannot be empty: %s", CONF_BASE_DIR);
     return false;
@@ -115,7 +114,8 @@ bool DefaultStorageStage::set_properties() {
 }
 
 //! Initialize stage params and validate outputs
-bool DefaultStorageStage::initialize() {
+bool DefaultStorageStage::initialize()
+{
   LOG_TRACE("Enter");
 
   MetricsRegistry &metricsRegistry = get_metrics_registry();
@@ -127,7 +127,8 @@ bool DefaultStorageStage::initialize() {
 }
 
 //! Cleanup after disconnection
-void DefaultStorageStage::cleanup() {
+void DefaultStorageStage::cleanup()
+{
   LOG_TRACE("Enter");
 
   if (handler_) {
@@ -137,7 +138,8 @@ void DefaultStorageStage::cleanup() {
   LOG_TRACE("Exit");
 }
 
-void DefaultStorageStage::handle_event(StageEvent *event) {
+void DefaultStorageStage::handle_event(StageEvent *event)
+{
   LOG_TRACE("Enter\n");
   TimerStat timerStat(*query_metric_);
 
@@ -152,8 +154,7 @@ void DefaultStorageStage::handle_event(StageEvent *event) {
 
   Query *sql = storage_event->exe_event()->sqls();
 
-  SessionEvent *session_event =
-      storage_event->exe_event()->sql_event()->session_event();
+  SessionEvent *session_event = storage_event->exe_event()->sql_event()->session_event();
 
   Session *session = session_event->get_client()->session;
   const char *current_db = session->get_current_db().c_str();
@@ -167,68 +168,60 @@ void DefaultStorageStage::handle_event(StageEvent *event) {
     case SCF_INSERT: {  // insert into
       const Inserts &inserts = sql->sstr.insertion;
       const char *table_name = inserts.relation_name;
-      rc = handler_->insert_record(current_trx, current_db, table_name,
-                                   inserts.value_num, inserts.values);
-      snprintf(response, sizeof(response), "%s\n",
-               rc == RC::SUCCESS ? "SUCCESS" : "FAILURE");
+      rc = handler_->insert_record(current_trx, current_db, table_name, inserts.value_num, inserts.values);
+      snprintf(response, sizeof(response), "%s\n", rc == RC::SUCCESS ? "SUCCESS" : "FAILURE");
     } break;
     case SCF_UPDATE: {
       const Updates &updates = sql->sstr.update;
       const char *table_name = updates.relation_name;
       const char *field_name = updates.attribute_name;
       int updated_count = 0;
-      rc = handler_->update_record(
-          current_trx, current_db, table_name, field_name, &updates.value,
-          updates.condition_num, updates.conditions, &updated_count);
-      snprintf(response, sizeof(response), "%s\n",
-               rc == RC::SUCCESS ? "SUCCESS" : "FAILURE");
+      rc = handler_->update_record(current_trx,
+          current_db,
+          table_name,
+          field_name,
+          &updates.value,
+          updates.condition_num,
+          updates.conditions,
+          &updated_count);
+      snprintf(response, sizeof(response), "%s\n", rc == RC::SUCCESS ? "SUCCESS" : "FAILURE");
     } break;
     case SCF_DELETE: {
       const Deletes &deletes = sql->sstr.deletion;
       const char *table_name = deletes.relation_name;
       int deleted_count = 0;
-      rc = handler_->delete_record(current_trx, current_db, table_name,
-                                   deletes.condition_num, deletes.conditions,
-                                   &deleted_count);
-      snprintf(response, sizeof(response), "%s\n",
-               rc == RC::SUCCESS ? "SUCCESS" : "FAILURE");
+      rc = handler_->delete_record(
+          current_trx, current_db, table_name, deletes.condition_num, deletes.conditions, &deleted_count);
+      snprintf(response, sizeof(response), "%s\n", rc == RC::SUCCESS ? "SUCCESS" : "FAILURE");
     } break;
     case SCF_CREATE_TABLE: {  // create table
       const CreateTable &create_table = sql->sstr.create_table;
-      rc = handler_->create_table(current_db, create_table.relation_name,
-                                  create_table.attribute_count,
-                                  create_table.attributes);
-      snprintf(response, sizeof(response), "%s\n",
-               rc == RC::SUCCESS ? "SUCCESS" : "FAILURE");
+      rc = handler_->create_table(
+          current_db, create_table.relation_name, create_table.attribute_count, create_table.attributes);
+      snprintf(response, sizeof(response), "%s\n", rc == RC::SUCCESS ? "SUCCESS" : "FAILURE");
     } break;
+
     case SCF_DROP_TABLE: {
 
       // TODO: 拿到要 drop 的表
-      const DropTable &drop_table = sql->sstr.drop_table;
 
       // TODO: 调用drop_table接口，drop_table 要在 handler_ 中实现
-      rc = handler_->drop_table(
-        current_db, drop_table.relation_name);
 
       // TODO: 返回结果，带不带换行符都可以
-      snprintf(response, sizeof(response), "%s\n", rc == RC::SUCCESS ? "SUCCESS" : "FAILURE");
 
     }break;
 
     case SCF_CREATE_INDEX: {
       const CreateIndex &create_index = sql->sstr.create_index;
       rc = handler_->create_index(
-          current_trx, current_db, create_index.relation_name,
-          create_index.index_name, create_index.attribute_name);
-      snprintf(response, sizeof(response), "%s\n",
-               rc == RC::SUCCESS ? "SUCCESS" : "FAILURE");
+          current_trx, current_db, create_index.relation_name, create_index.index_name, create_index.attribute_name);
+      snprintf(response, sizeof(response), "%s\n", rc == RC::SUCCESS ? "SUCCESS" : "FAILURE");
     } break;
 
     case SCF_SHOW_TABLES: {
       Db *db = handler_->find_db(current_db);
       if (nullptr == db) {
-        snprintf(response, sizeof(response), "No such database: %s\n",
-                 current_db);
+        snprintf(response, sizeof(response), "No such database: %s\n", current_db);
       } else {
         std::vector<std::string> all_tables;
         db->all_tables(all_tables);
@@ -283,8 +276,8 @@ void DefaultStorageStage::handle_event(StageEvent *event) {
   LOG_TRACE("Exit\n");
 }
 
-void DefaultStorageStage::callback_event(StageEvent *event,
-                                         CallbackContext *context) {
+void DefaultStorageStage::callback_event(StageEvent *event, CallbackContext *context)
+{
   LOG_TRACE("Enter\n");
   StorageEvent *storage_event = static_cast<StorageEvent *>(event);
   storage_event->exe_event()->done_immediate();
@@ -300,9 +293,10 @@ void DefaultStorageStage::callback_event(StageEvent *event,
  * @param errmsg 如果出现错误，通过这个参数返回错误信息
  * @return 成功返回RC::SUCCESS
  */
-RC insert_record_from_file(Table *table, std::vector<std::string> &file_values,
-                           std::vector<Value> &record_values,
-                           std::stringstream &errmsg) {
+RC insert_record_from_file(
+    Table *table, std::vector<std::string> &file_values, std::vector<Value> &record_values, std::stringstream &errmsg)
+{
+
   const int field_num = record_values.size();
   const int sys_field_num = table->table_meta().sys_field_num();
 
@@ -327,8 +321,7 @@ RC insert_record_from_file(Table *table, std::vector<std::string> &file_values,
         int int_value;
         deserialize_stream >> int_value;
         if (!deserialize_stream || !deserialize_stream.eof()) {
-          errmsg << "need an integer but got '" << file_values[i]
-                 << "' (field index:" << i << ")";
+          errmsg << "need an integer but got '" << file_values[i] << "' (field index:" << i << ")";
 
           rc = RC::SCHEMA_FIELD_TYPE_MISMATCH;
         } else {
@@ -344,8 +337,7 @@ RC insert_record_from_file(Table *table, std::vector<std::string> &file_values,
         float float_value;
         deserialize_stream >> float_value;
         if (!deserialize_stream || !deserialize_stream.eof()) {
-          errmsg << "need a float number but got '" << file_values[i]
-                 << "'(field index:" << i << ")";
+          errmsg << "need a float number but got '" << file_values[i] << "'(field index:" << i << ")";
           rc = RC::SCHEMA_FIELD_TYPE_MISMATCH;
         } else {
           value_init_float(&record_values[i], float_value);
@@ -373,22 +365,20 @@ RC insert_record_from_file(Table *table, std::vector<std::string> &file_values,
   return rc;
 }
 
-std::string DefaultStorageStage::load_data(const char *db_name,
-                                           const char *table_name,
-                                           const char *file_name) {
+std::string DefaultStorageStage::load_data(const char *db_name, const char *table_name, const char *file_name)
+{
+
   std::stringstream result_string;
   Table *table = handler_->find_table(db_name, table_name);
   if (nullptr == table) {
-    result_string << "No such table " << db_name << "." << table_name
-                  << std::endl;
+    result_string << "No such table " << db_name << "." << table_name << std::endl;
     return result_string.str();
   }
 
   std::fstream fs;
   fs.open(file_name, std::ios_base::in | std::ios_base::binary);
   if (!fs.is_open()) {
-    result_string << "Failed to open file: " << file_name
-                  << ". system error=" << strerror(errno) << std::endl;
+    result_string << "Failed to open file: " << file_name << ". system error=" << strerror(errno) << std::endl;
     return result_string.str();
   }
 
@@ -416,9 +406,8 @@ std::string DefaultStorageStage::load_data(const char *db_name,
     std::stringstream errmsg;
     rc = insert_record_from_file(table, file_values, record_values, errmsg);
     if (rc != RC::SUCCESS) {
-      result_string << "Line:" << line_num
-                    << " insert record failed:" << errmsg.str()
-                    << ". error:" << strrc(rc) << std::endl;
+      result_string << "Line:" << line_num << " insert record failed:" << errmsg.str() << ". error:" << strrc(rc)
+                    << std::endl;
     } else {
       insertion_count++;
     }
@@ -427,13 +416,10 @@ std::string DefaultStorageStage::load_data(const char *db_name,
 
   struct timespec end_time;
   clock_gettime(CLOCK_MONOTONIC, &end_time);
-  long cost_nano = (end_time.tv_sec - begin_time.tv_sec) * 1000000000L +
-                   (end_time.tv_nsec - begin_time.tv_nsec);
+  long cost_nano = (end_time.tv_sec - begin_time.tv_sec) * 1000000000L + (end_time.tv_nsec - begin_time.tv_nsec);
   if (RC::SUCCESS == rc) {
-    result_string << strrc(rc) << ". total " << line_num
-                  << " line(s) handled and " << insertion_count
-                  << " record(s) loaded, total cost "
-                  << cost_nano / 1000000000.0 << " second(s)" << std::endl;
+    result_string << strrc(rc) << ". total " << line_num << " line(s) handled and " << insertion_count
+                  << " record(s) loaded, total cost " << cost_nano / 1000000000.0 << " second(s)" << std::endl;
   }
   return result_string.str();
 }

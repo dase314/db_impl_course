@@ -20,8 +20,6 @@ typedef struct ParserContext {
   Condition conditions[MAX_NUM];
   CompOp comp;
 	char id[MAX_NUM];
-	size_t func_length;
-  FuncName func[MAX_NUM]; 
 } ParserContext;
 
 //获取子串
@@ -104,11 +102,6 @@ ParserContext *get_context(yyscan_t scanner)
         LE
         GE
         NE
-				AGGMAX
-		    AGGMIN
-		    AGGCOUNT
-		    AGGAVG
-				AGGSUM
 
 %union {
   struct _Attr *attr;
@@ -357,7 +350,6 @@ select:				/*  select 语句的语法解析树*/
 			CONTEXT->from_length=0;
 			CONTEXT->select_length=0;
 			CONTEXT->value_length = 0;
-			CONTEXT->func_length=0;
 	}
 	;
 
@@ -377,32 +369,7 @@ select_attr:
 			relation_attr_init(&attr, $1, $3);
 			selects_append_attribute(&CONTEXT->ssql->sstr.selection, &attr);
 		}
-		| ID DOT STAR attr_list {
-			RelAttr attr;
-			relation_attr_init(&attr, $1, "*");
-			selects_append_attribute(&CONTEXT->ssql->sstr.selection, &attr);
-		}
-		| func LBRACE expression RBRACE attr_list {// count(expression)
-	  }
     ;
-
-expression:
-	STAR {// *
-			RelAttr attr;
-			relation_attr_init(&attr, NULL, "*");
-			selects_append_aggregation_attr(&CONTEXT->ssql->sstr.selection, CONTEXT->func[CONTEXT->func_length-1],&attr);
-	}
-	| ID{// age
-			RelAttr attr;
-			relation_attr_init(&attr, NULL, $1);
-			selects_append_aggregation_attr(&CONTEXT->ssql->sstr.selection, CONTEXT->func[CONTEXT->func_length-1],&attr);
-	}
-	| value{ // 1
-			Value *right_value = &CONTEXT->values[CONTEXT->value_length - 1];
-			selects_append_aggregation_value(&CONTEXT->ssql->sstr.selection, CONTEXT->func[CONTEXT->func_length-1],right_value);
-	}
-	;
-
 attr_list:
     /* empty */
     | COMMA ID attr_list {
@@ -419,14 +386,6 @@ attr_list:
         // CONTEXT->ssql->sstr.selection.attributes[CONTEXT->select_length].attribute_name=$4;
         // CONTEXT->ssql->sstr.selection.attributes[CONTEXT->select_length++].relation_name=$2;
   	  }
-		| COMMA ID DOT STAR attr_list {
-			RelAttr attr;
-			relation_attr_init(&attr, $2, "*");
-			selects_append_attribute(&CONTEXT->ssql->sstr.selection, &attr);
-		}
-		| COMMA func LBRACE expression RBRACE attr_list {
-
-	  }
   	;
 
 rel_list:
@@ -601,14 +560,6 @@ comOp:
     | LE { CONTEXT->comp = LESS_EQUAL; }
     | GE { CONTEXT->comp = GREAT_EQUAL; }
     | NE { CONTEXT->comp = NOT_EQUAL; }
-    ;
-
-func:
-  	  AGGMAX { CONTEXT->func[CONTEXT->func_length++] = AGG_MAX; }
-    | AGGMIN { CONTEXT->func[CONTEXT->func_length++] = AGG_MIN; }
-    | AGGCOUNT { CONTEXT->func[CONTEXT->func_length++] = AGG_COUNT; }
-    | AGGAVG { CONTEXT->func[CONTEXT->func_length++] = AGG_AVG; }
-		| AGGSUM { CONTEXT->func[CONTEXT->func_length++] = AGG_SUM; }
     ;
 
 load_data:
