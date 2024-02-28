@@ -1,112 +1,127 @@
-# include 另外一个cmake 配置
-#INCLUDE(file1 [OPTIONAL])
+cmake_minimum_required(VERSION 3.25)
 
-cmake_minimum_required(VERSION 3.10)
-set(CMAKE_CXX_STANDARD 14)
-#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+# -- configure external project download -- #
 
-project(minidb)
+include(FetchContent)
 
-MESSAGE(STATUS "This is SOURCE dir " ${test_SOURCE_DIR})
-MESSAGE(STATUS "This is BINARY dir " ${test_BINARY_DIR})
-MESSAGE(STATUS "This is Project source dir " ${PROJECT_SOURCE_DIR})
-MESSAGE(STATUS "This is PROJECT_BINARY_DIR dir " ${PROJECT_BINARY_DIR})
+add_compile_options(-DEVENT__DISABLE_OPENSSL=ON)
+
+FetchContent_Declare(
+    event
+    GIT_REPOSITORY  "https://github.com/libevent/libevent.git"
+    GIT_TAG         "release-2.1.12-stable"
+    EXCLUDE_FROM_ALL
+    QUIET
+)
+
+FetchContent_Declare(
+    jsoncpp
+    GIT_REPOSITORY  "https://github.com/open-source-parsers/jsoncpp.git"
+    GIT_TAG         "1.9.5"
+    EXCLUDE_FROM_ALL
+    QUIET
+)
+
+FetchContent_Declare(
+    gtest
+    GIT_REPOSITORY  "https://github.com/google/googletest"
+    GIT_TAG         "v1.14.0"
+    EXCLUDE_FROM_ALL
+    QUIET
+)
+
+FetchContent_MakeAvailable(event jsoncpp gtest)
+
+project(miniob LANGUAGES C CXX)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS true)
+
+# -- find threads library -- #
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
+# -- when debug is enabled -- #
+if(DEBUG OR ENV{DEBUG})
+    message(STATUS "**DEBUG**")
+    add_compile_options(-Og -g -DDEBUG)
+else()
+    message(STATUS "**NOT DEBUG**")
+    add_compile_options(-O2 -g)
+endif()
+
+# -- specify platform -- #
+if(APPLE)
+    message(STATUS "Platform: APPLE")
+    add_definitions(-D__MACH__ )
+elseif(UNIX)
+    message(STATUS "Platform: UNIX")
+    add_definitions(-DUNIX -DLINUX)
+else()
+    message(WARNING "Platform: Unsupported OS")
+endif()
+
+# -- configure common lib build command -- #
+file(GLOB_RECURSE SRC common/*.cpp)
+file(GLOB_RECURSE INC common/*.h)
+
+foreach(F ${INC})
+    file(RELATIVE_PATH REL ${CMAKE_CURRENT_SOURCE_DIR}/miniob-client ${F})
+    configure_file(miniob-client/${REL} include/common/${REL} COPYONLY)
+    unset(REL)
+endforeach()
+
+add_library(common STATIC ${SRC})
+target_include_directories(common PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/include)
+
+# -- configure server build command -- #
+
+file(GLOB_RECURSE SRC miniob-server/*.cpp miniob-server/*.c)
+file(GLOB_RECURSE INC miniob-server/*.h)
+
+foreach(F ${INC})
+    file(RELATIVE_PATH REL ${CMAKE_CURRENT_SOURCE_DIR}/miniob-server ${F})
+    configure_file(miniob-server/${REL} miniob-server-headers/${REL} COPYONLY)
+    unset(REL)
+endforeach()
+
+add_executable(miniob-server ${SRC})
+target_link_libraries(miniob-server PUBLIC event jsoncpp_static dl Threads::Threads common)
+target_include_directories(miniob-server PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/miniob-server-headers)
+
+add_library(miniob-server-lib STATIC ${SRC}) # this library is created for unittests
+target_link_libraries(miniob-server-lib PUBLIC event jsoncpp_static dl Threads::Threads common)
+target_include_directories(miniob-server-lib PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/miniob-server-headers)
+
+# -- configure client build command -- #
+
+file(GLOB_RECURSE SRC miniob-client/*.cpp)
+
+add_executable(miniob-client ${SRC})
+target_link_libraries(miniob-client common Threads::Threads dl)
 
 
-SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
-#SET(LIBRARY_OUTPUT_PATH <路径>)
+# -- configure test build command -- #
+file(GLOB_RECURSE SRC tests/*.cpp)
+foreach(F ${SRC})
+    get_filename_component(X ${F} NAME_WE)
+    message(STATUS "executable ${X}")
+    add_executable(${X} ${F})
+    target_link_libraries(${X} miniob-server-lib)
+endforeach()
 
-MESSAGE(STATUS "HOME dir: $ENV{HOME}")
-#SET(ENV{变量名} 值)
-IF(WIN32)
-    MESSAGE(STATUS "This is windows.")
-    ADD_DEFINITIONS(-DWIN32)
-ELSEIF(WIN64)
-        MESSAGE(STATUS "This is windows.")
-        ADD_DEFINITIONS(-DWIN64)
-ELSEIF(APPLE)
-    MESSAGE(STATUS "This is apple")
-    # normally __MACH__ has already been defined
-    ADD_DEFINITIONS(-D__MACH__ )
-ELSEIF(UNIX)
-    MESSAGE(STATUS "This is UNIX")
-    ADD_DEFINITIONS(-DUNIX -DLINUX)
-ELSE()
-    MESSAGE(STATUS "This is UNKNOW OS")
-ENDIF(WIN32)
-
-# This is for clangd plugin for vscode
-#SET(CMAKE_COMMON_FLAGS ${CMAKE_COMMON_FLAGS} " -Wstring-plus-int -Wsizeof-array-argument -Wunused-variable -Wmissing-braces")
-SET(CMAKE_COMMON_FLAGS "${CMAKE_COMMON_FLAGS} -Wall -DCMAKE_EXPORT_COMPILE_COMMANDS=1")
-IF(DEBUG)
-    MESSAGE("DEBUG has been set as TRUE ${DEBUG}")
-    #"${CMAKE_COMMON_FLAGS}  -O0 -g "  ${CMAKE_COMMON_FLAGS}最好在""以内，防止被cmake 增加了;
-    SET(CMAKE_COMMON_FLAGS "${CMAKE_COMMON_FLAGS}  -O0 -g -DDEBUG ")
-    ADD_DEFINITIONS(-DENABLE_DEBUG)
-ELSEIF(NOT DEFINED ENV{DEBUG})
-    MESSAGE("Disable debug")
-    SET(CMAKE_COMMON_FLAGS "${CMAKE_COMMON_FLAGS}  -O2 -g ")
-ELSE()
-    MESSAGE("Enable debug")
-    SET(CMAKE_COMMON_FLAGS "${CMAKE_COMMON_FLAGS}  -O0 -g -DDEBUG")
-    ADD_DEFINITIONS(-DENABLE_DEBUG)
-ENDIF()
-SET(CMAKE_CXX_FLAGS ${CMAKE_COMMON_FLAGS})
-SET(CMAKE_C_FLAGS ${CMAKE_COMMON_FLAGS})
-MESSAGE("CMAKE_CXX_FLAGS is " ${CMAKE_CXX_FLAGS})
-
-
-IF (CMAKE_INSTALL_PREFIX)
-    MESSAGE("CMAKE_INSTALL_PREFIX has been set as " ${CMAKE_INSTALL_PREFIX} )
-ELSEIF(DEFINED ENV{CMAKE_INSTALL_PREFIX})
-    SET(CMAKE_INSTALL_PREFIX $ENV{CMAKE_INSTALL_PREFIX})
-ELSE()
-    SET(CMAKE_INSTALL_PREFIX /tmp/${PROJECT_NAME})
-ENDIF()
-MESSAGE("Install target dir is " ${CMAKE_INSTALL_PREFIX})
-
-
-# ADD_SUBDIRECTORY(src bin)  bin 为目标目录， 可以省略
-ADD_SUBDIRECTORY(deps)
-ADD_SUBDIRECTORY(src)
-ADD_SUBDIRECTORY(unitest)
-ADD_SUBDIRECTORY(test)
-
-
-# install 准备安装的目录是cmakefile 的当前目录， 不是build 后生成的目录
-# Files 默认权限OWNER_WRITE, OWNER_READ, GROUP_READ,和WORLD_READ，即644权限
-# INSTALL(FILES docs/README DESTINATION ./  )
-# INSTALL(DIRECTORY docs DESTINATION ./
-#        PATTERN "README" EXCLUDE)
-#  PERMISSIONS 可以直接替换
-#INSTALL(DIRECTORY bin DESTINATION ./
-#        FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_READ
-#        DIRECTORY_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_READ WORLD_EXECUTE)
-
-INSTALL(DIRECTORY etc DESTINATION .
-		FILE_PERMISSIONS OWNER_WRITE OWNER_READ GROUP_READ WORLD_READ)
-
-#INSTALL([[SCRIPT <file>] [CODE <code>]] [...])
-# script 表示安装时，调用cmake 脚步
-# code 表示安装时，执行cmake 命令， 例如
-INSTALL(CODE "MESSAGE(\"Sample install message.\")")
-# EXEC_PROGRAM make时执行命令
-#EXEC_PROGRAM(Executable [directory in which to run]
-#        [ARGS <arguments to executable>]
-#        [OUTPUT_VARIABLE <var>]
-
-
-
-
-# ADD_TEST与ENABLE_TESTING 参考书籍
-
-#EXEC_PROGRAM(Executable [directory in which to run]
-#        [ARGS <arguments to executable>]
-#        [OUTPUT_VARIABLE <var>]
-#        [RETURN_VALUE <var>])
-# 生产make时，执行
-#EXEC_PROGRAM(ls ARGS "*.c" OUTPUT_VARIABLE LS_OUTPUT RETURN_VALUE
-#        LS_RVALUE)
-#IF(not LS_RVALUE)
-#    MESSAGE(STATUS "ls result: " ${LS_OUTPUT})
-#ENDIF(not LS_RVALUE)
+# -- configure unit-test build command -- #
+enable_testing()
+file(GLOB_RECURSE SRC unit-tests/*.cpp)
+include(GoogleTest)
+foreach(F ${SRC})
+    get_filename_component(X ${F} NAME_WE)
+    message(STATUS "executable ${X}")
+    add_executable(${X} ${F})
+    target_link_libraries(${X} Threads::Threads dl gtest gtest_main miniob-server-lib)
+    add_test(SystemInformationNew ${X})
+endforeach()
