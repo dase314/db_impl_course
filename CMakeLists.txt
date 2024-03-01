@@ -4,7 +4,10 @@ cmake_minimum_required(VERSION 3.25)
 
 include(FetchContent)
 
-add_compile_options(-DEVENT__DISABLE_OPENSSL=ON)
+set(CMAKE_POLICY_DEFAULT_CMP0077        NEW)
+set(EVENT__DISABLE_OPENSSL              ON)     # pass these options \ 
+set(JSONCPP_WITH_TESTS                  OFF)    # to external projects
+set(JSONCPP_WITH_POST_BUILD_UNITTEST    OFF)
 
 FetchContent_Declare(
     event
