@@ -24,7 +24,7 @@ See the Mulan PSL v2 for more details. */
 #include <time.h>
 
 #include "rc.h"
-#include "common/mm/mem_pool.h"
+#include <common/mm/mem_pool.h>
 
 typedef int PageNum;
 
